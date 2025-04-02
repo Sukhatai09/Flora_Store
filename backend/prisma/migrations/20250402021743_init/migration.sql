@@ -7,6 +7,3 @@ CREATE TABLE "Cream" (
 
     CONSTRAINT "Cream_pkey" PRIMARY KEY ("id")
 );
-
--- CreateIndex
-CREATE UNIQUE INDEX "Cream_name_key" ON "Cream"("name");
