@@ -13,10 +13,90 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Flower {
+  flower_id      String   @id @default(uuid())
+  name           String
+  description    String
+  price          Int
+  image_url      String
+  stock_quantity Int
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
 
-model Cream {
-  id        Int      @id @default(autoincrement())
-  name      String 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  OrderItems  OrderItem[]
+  FlowerLikes FlowerLike[]
+  CartItems   CartItem[]
+}
+
+model Customer {
+  customer_id  String   @id @default(uuid())
+  first_name   String
+  last_name    String
+  email        String   @unique
+  password     String
+  phone_number String
+  role         String  @default("user")
+  image_url    String?
+  address      String?
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  Orders      Order[]
+  FlowerLikes FlowerLike[]
+  Cart        Cart?
+}
+
+model Order {
+  order_id         String   @id @default(uuid())
+  customer_id      String
+  order_date       DateTime @default(now())
+  total_amount     Int
+  status           Boolean
+  shipping_address String
+  payment_method   String
+
+  Customer   Customer    @relation(fields: [customer_id], references: [customer_id])
+  OrderItems OrderItem[]
+}
+
+model OrderItem {
+  order_item_id String @id @default(uuid())
+  order_id      String
+  flower_id     String
+  quantity      Int
+  price         Int
+
+  Order  Order  @relation(fields: [order_id], references: [order_id])
+  Flower Flower @relation(fields: [flower_id], references: [flower_id])
+}
+
+model FlowerLike {
+  like_id     String   @id @default(uuid())
+  customer_id String
+  flower_id   String
+  created_at  DateTime @default(now())
+
+  Customer Customer @relation(fields: [customer_id], references: [customer_id])
+  Flower   Flower   @relation(fields: [flower_id], references: [flower_id])
+}
+
+model Cart {
+  cart_id     String   @id @default(uuid())
+  customer_id String   @unique
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  Customer  Customer   @relation(fields: [customer_id], references: [customer_id])
+  CartItems CartItem[]
+}
+
+model CartItem {
+  cart_item_id String   @id @default(uuid())
+  cart_id      String
+  flower_id    String
+  quantity     Int
+  added_at     DateTime @default(now())
+
+  Cart   Cart   @relation(fields: [cart_id], references: [cart_id])
+  Flower Flower @relation(fields: [flower_id], references: [flower_id])
 }
