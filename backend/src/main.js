@@ -1,8 +1,8 @@
-const express = require("express");
-const cors = require("cors");
-const dotenv = require("dotenv");
-const morgan = require("morgan");
-const flowerRouter = require("./routes/flowerRouter");
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import morgan from "morgan";
+import authRoutes from "./routes/authRoutes.js";
 
 
 dotenv.config();
@@ -12,7 +12,8 @@ const port = process.env.PORT || 5000;
 app.use(morgan('dev'));
 app.use(cors());
 app.use(express.json());
-app.use("/api", flowerRouter);
+app.use('/api', authRoutes);
+
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
