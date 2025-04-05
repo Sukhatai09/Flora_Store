@@ -3,6 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import authRoutes from "./routes/authRoutes.js";
+import cookieParser from "cookie-parser";
+import flowerRoutes from "./routes/flowerRoutes.js";
 
 
 dotenv.config();
@@ -12,7 +14,9 @@ const port = process.env.PORT || 5000;
 app.use(morgan('dev'));
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 app.use('/api', authRoutes);
+app.use('/api',flowerRoutes);
 
 
 app.get("/", (req, res) => {
