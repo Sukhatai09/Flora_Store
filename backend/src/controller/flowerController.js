@@ -1,5 +1,6 @@
 import z from "zod";
-import { createflowerService } from "../service/flowerService.js";
+import { createflowerService, updateflowerService ,deleteFlowerService} from "../service/flowerService.js";
+import fs from "fs";
 
 const flowerSchema = z.object({
     name: z.string().min(1, "Name is required"),
@@ -31,6 +32,60 @@ export const createFlower = async (req, res) => {
       data: newFlower,
     });
 
+  } catch (err) {
+    if (err instanceof z.ZodError) {
+      res.status(400).json({ message: err.errors });
+    } else {
+      console.error(err);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+}
+
+export const updateFlower = async (req, res) => {
+  try{
+    const { id } = req.params; // ดึง id จาก params
+    
+    const fileUrl = req.file?.path; // ดึง path จาก multer upload
+  
+    const validateData = flowerSchema.parse({...req.body,image_url:fileUrl}); // validate ข้อมูลที่ส่งมาใน body
+    const updatedFlower = await updateflowerService(id, validateData); // อัพเดตข้อมูลใน database
+    res.status(200).json({
+      message: "Flower updated successfully",
+      data: updatedFlower,
+    });
+
+  } catch (err) {
+    if (err instanceof z.ZodError) {
+      res.status(400).json({ message: err.errors });
+    } else {
+      console.error(err);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+}
+
+export const deleteFlower = async (req, res) => {
+  try{
+    const { id } = req.params; // ดึง id จาก params
+    
+    // ลบข้อมูลใน database
+    const deletedFlower = await deleteFlowerService(id); 
+    
+    // ลบไฟล์ภาพจาก server
+    const filePath = deletedFlower.image_url; // ดึง path ของไฟล์ภาพที่ต้องการลบ
+    fs.unlink(filePath, (err) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log(`File ${filePath} deleted successfully`);
+      }
+    });
+    
+    res.status(200).json({
+      message: "Flower deleted successfully",
+      data: deletedFlower,
+    });
   } catch (err) {
     if (err instanceof z.ZodError) {
       res.status(400).json({ message: err.errors });

@@ -51,7 +51,7 @@ model Order {
   customer_id      String
   order_date       DateTime @default(now())
   total_amount     Int
-  status           Boolean
+  status           String   @default("padding")
   shipping_address String
   payment_method   String
 
