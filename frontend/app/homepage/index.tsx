@@ -1,6 +1,5 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import Topbar from '../Navbar/topbar';
-import Buttonbar from '../Navbar/buttonbar';
+
 import React, { useRef, useEffect, useState } from 'react';
 import {
   View,
@@ -68,9 +67,7 @@ export default function App() {
     
     <View className="flex-1 bg-white">
     {/* Topbar อยู่ด้านบนแบบ fix */}
-    <View className="z-10">
-      <Topbar />
-    </View>
+
 
     {/* ScrollView ข้างล่าง */}
     <ScrollView
@@ -264,9 +261,7 @@ export default function App() {
    
     </ScrollView>
 
-    <View className="z-10">
-      <Buttonbar />
-    </View>
+
     </View>
   );
 }

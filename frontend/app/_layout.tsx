@@ -1,21 +1,20 @@
-import { Stack } from "expo-router";
-import { useFonts } from "expo-font";
-import "./global.css";
-import { View } from "react-native";
+import { View } from 'react-native';
+import { Slot, usePathname } from 'expo-router';
+import Topbar from './components/topbar';
+import Buttonbar from './components/buttonbar';
 
-export default function RootLayout() {
-  useFonts({
-    prompt: require("../assets/fonts/Prompt-Light.ttf"),
-    "prompt-bold": require("..//assets/fonts/Prompt-Bold.ttf"),
-    "prompt-regular": require("../assets/fonts/Prompt-Medium.ttf"),
-  });
+
+export default function Layout() {
+  const pathname = usePathname();
+  const showNavbar = pathname !== '/';
+
   return (
-    <View className="flex-1">
- 
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
+    <View className="flex-1 ">
+      {showNavbar && <Topbar />}
+      <View className="flex-1">
+        <Slot />
+      </View>
+      {showNavbar && <Buttonbar />}
     </View>
   );
 }

@@ -12,10 +12,7 @@ const allproduct = () => {
   }
   return (
     <View>
-      <Text>cart</Text>
-
-      <TouchableOpacity className='mt-96' onPress={() => handlePress(33333333333333333) }><Text>cream</Text></TouchableOpacity>
-        <Text>Detail</Text>
+        <Text>allproduct</Text>
     </View>
   )
 }
