@@ -6,3 +6,11 @@ export const registerService = async (userData) => {
     });
 
 }
+
+export const getUserByEmail = async (email) => {   //login
+    return await prisma.customer.findUnique({
+        where: {
+            email: email,
+        },
+    });
+};
