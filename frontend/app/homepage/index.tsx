@@ -11,10 +11,76 @@ import {
   NativeSyntheticEvent,
   ScrollView,
 } from 'react-native';
+import ProductShow from '../components/ProductShow';
+import ShowseeAll from '../components/ShowseeAll';
+import ProductFav from '../components/ProductFav';
+
 
 const { width } = Dimensions.get('window');
 
-const promoData = [
+const carts = [
+  {
+    id: 1,
+    name: 'Flower bouquet',
+    price: '500 bath',
+    image: require('../../assets/images/flower1.png'),
+  },
+  {
+    id: 2,
+    name: 'Flower bouquet',
+    price: '500 bath',
+    image: require('../../assets/images/flower1.png'),
+  },
+  {
+    id: 3,
+    name: 'Flower bouquet',
+    price: '500 bath',
+    image: require('../../assets/images/flower1.png'),
+  },
+]
+
+const favorite = [
+  {
+    id: 1,
+    name: 'Flower bouquet',
+    price: '500 bath',
+    image: require('../../assets/images/flower1.png'),
+  },
+  {
+    id: 2,
+    name: 'Flower bouquet',
+    price: '500 bath',
+    image: require('../../assets/images/flower1.png'),
+  },
+  {
+    id: 3,
+    name: 'Flower bouquet',
+    price: '500 bath',
+    image: require('../../assets/images/flower1.png'),
+  },
+]
+
+const products = [
+  {
+    id: 1,
+    name: 'Flower bouquet',
+    price: '500 bath',
+    image: require('../../assets/images/flower1.png'),
+  },
+  {
+    id: 2,
+    name: 'Flower bouquet',
+    price: '500 bath',
+    image: require('../../assets/images/flower1.png'),
+  },
+  {
+    id: 3,
+    name: 'Flower bouquet',
+    price: '500 bath',
+    image: require('../../assets/images/flower1.png'),
+  },
+]
+const promote = [
   {
     id: '1',
     text: 'SPECIAL OFFER! Buy 1 bouquet get 1 50% off!',
@@ -44,7 +110,7 @@ export default function App() {
     if (!isAutoScroll) return;
 
     const timer = setInterval(() => {
-      const nextIndex = (currentIndex + 1) % promoData.length;
+      const nextIndex = (currentIndex + 1) % promote.length;
       setCurrentIndex(nextIndex);
       flatListRef.current?.scrollToIndex({ index: nextIndex, animated: true });
     }, 3000);
@@ -79,7 +145,7 @@ export default function App() {
      
       <FlatList
         ref={flatListRef}
-        data={promoData}
+        data={promote}
         keyExtractor={(item) => item.id}
         horizontal
         pagingEnabled
@@ -106,7 +172,7 @@ export default function App() {
 
       {/* Indicator */}
       <View className="flex-row justify-center mt-4">
-        {promoData.map((_, index) => (
+        {promote.map((_, index) => (
           <View
             key={index}
             className={`mx-1 w-3 h-3 rounded-full ${
@@ -117,147 +183,17 @@ export default function App() {
       </View> 
 
 
+      <ShowseeAll  name="Flower bouquet" haf="allproduct" />   
 
-      {/* ดอกไม้วาเลนไทน์ */}
-   
-        <View className=' flex-row justify-between px-4 py-4 '>
-          <Text className='font-bold text-xl'>Flower bouquet</Text>
-          <Text className='font-bold text-xl'>See all</Text>
-        </View>
-        <View className='bg-[#FEACA6] w-full h-[175px]'>
-          <View className='bg-[#ffffff] w-full  h-[100%] flex-row justify-between px-4 '>
-          <View className=' bg-[#C6A6FE] flex-col items-center w-[30%] h-full
-           justify-start py-4 relative '>
-          <Image source={require('../../assets/images/flower1.png')} 
-            className='w-24 h-[65%] object-cover ' />
-            <View className='font-bold text-xl flex-col items-center justify-center bg-[#F8DAE2] w-full h-[35%] mt-4'>
-              <Text>Flower bouquet</Text>
-              <Text>500 bath</Text>
-            </View>
-            <MaterialCommunityIcons name="cards-heart-outline" size={25}
-              color="black"  className=' absolute top-1 right-2 '/>
-          </View>
+    <ProductShow products={products} />
+    
+        <ShowseeAll name="favorite" haf="favorite" />  
+     
+        <ProductFav products={favorite} />
 
-          <View className=' bg-[#C6A6FE] flex-col items-center w-[30%] h-full
-           justify-start py-4 relative '>
-          <Image source={require('../../assets/images/flower1.png')} 
-            className='w-24 h-[65%] object-cover ' />
-            <View className='font-bold text-xl flex-col items-center justify-center bg-[#F8DAE2] w-full h-[35%] mt-4'>
-              <Text>Flower bouquet</Text>
-              <Text>500 bath</Text>
-            </View>
-            <MaterialCommunityIcons name="cards-heart-outline" size={25}
-              color="black"  className=' absolute top-1 right-2 '/>
-          </View>
-
-          <View className=' bg-[#C6A6FE] flex-col items-center w-[30%] h-full
-           justify-start py-4 relative '>
-          <Image source={require('../../assets/images/flower1.png')} 
-            className='w-24 h-[65%] object-cover ' />
-            <View className='font-bold text-xl flex-col items-center justify-center bg-[#F8DAE2] w-full h-[35%] mt-4'>
-              <Text>Flower bouquet</Text>
-              <Text>500 bath</Text>
-            </View>
-            <MaterialCommunityIcons name="cards-heart-outline" size={25}
-              color="black"  className=' absolute top-1 right-2 '/>
-          </View>
-          </View>
-
-          
-        </View>
-
-        <View className=' flex-row justify-between px-4 py-4 '>
-          <Text className='font-bold text-xl'>Flower bouquet</Text>
-          <Text className='font-bold text-xl'>See all</Text>
-        </View>
-        <View className='bg-[#FEACA6] w-full h-[175px]'>
-          <View className='bg-[#ffffff] w-full  h-[100%] flex-row justify-between px-4 '>
-          <View className=' bg-[#C6A6FE] flex-col items-center w-[30%] h-full
-           justify-start py-4 relative '>
-          <Image source={require('../../assets/images/flower1.png')} 
-            className='w-24 h-[65%] object-cover ' />
-            <View className='font-bold text-xl flex-col items-center justify-center bg-[#F8DAE2] w-full h-[35%] mt-4'>
-              <Text>Flower bouquet</Text>
-              <Text>500 bath</Text>
-            </View>
-            <MaterialCommunityIcons name="cards-heart-outline" size={25}
-              color="black"  className=' absolute top-1 right-2 '/>
-          </View>
-
-          <View className=' bg-[#C6A6FE] flex-col items-center w-[30%] h-full
-           justify-start py-4 relative '>
-          <Image source={require('../../assets/images/flower1.png')} 
-            className='w-24 h-[65%] object-cover ' />
-            <View className='font-bold text-xl flex-col items-center justify-center bg-[#F8DAE2] w-full h-[35%] mt-4'>
-              <Text>Flower bouquet</Text>
-              <Text>500 bath</Text>
-            </View>
-            <MaterialCommunityIcons name="cards-heart-outline" size={25}
-              color="black"  className=' absolute top-1 right-2 '/>
-          </View>
-
-          <View className=' bg-[#C6A6FE] flex-col items-center w-[30%] h-full
-           justify-start py-4 relative '>
-          <Image source={require('../../assets/images/flower1.png')} 
-            className='w-24 h-[65%] object-cover ' />
-            <View className='font-bold text-xl flex-col items-center justify-center bg-[#F8DAE2] w-full h-[35%] mt-4'>
-              <Text>Flower bouquet</Text>
-              <Text>500 bath</Text>
-            </View>
-            <MaterialCommunityIcons name="cards-heart-outline" size={25}
-              color="black"  className=' absolute top-1 right-2 '/>
-          </View>
-          </View>
-
-          
-        </View>
-
-
-        <View className=' flex-row justify-between px-4 py-4 '>
-          <Text className='font-bold text-xl'>Flower bouquet</Text>
-          <Text className='font-bold text-xl'>See all</Text>
-        </View>
-        <View className='bg-[#FEACA6] w-full h-[175px]'>
-          <View className='bg-[#ffffff] w-full  h-[100%] flex-row justify-between px-4 '>
-          <View className=' bg-[#C6A6FE] flex-col items-center w-[30%] h-full
-           justify-start py-4 relative '>
-          <Image source={require('../../assets/images/flower1.png')} 
-            className='w-24 h-[65%] object-cover ' />
-            <View className='font-bold text-xl flex-col items-center justify-center bg-[#F8DAE2] w-full h-[35%] mt-4'>
-              <Text>Flower bouquet</Text>
-              <Text>500 bath</Text>
-            </View>
-            <MaterialCommunityIcons name="cards-heart-outline" size={25}
-              color="black"  className=' absolute top-1 right-2 '/>
-          </View>
-
-          <View className=' bg-[#C6A6FE] flex-col items-center w-[30%] h-full
-           justify-start py-4 relative '>
-          <Image source={require('../../assets/images/flower1.png')} 
-            className='w-24 h-[65%] object-cover ' />
-            <View className='font-bold text-xl flex-col items-center justify-center bg-[#F8DAE2] w-full h-[35%] mt-4'>
-              <Text>Flower bouquet</Text>
-              <Text>500 bath</Text>
-            </View>
-            <MaterialCommunityIcons name="cards-heart-outline" size={25}
-              color="black"  className=' absolute top-1 right-2 '/>
-          </View>
-
-          <View className=' bg-[#C6A6FE] flex-col items-center w-[30%] h-full
-           justify-start py-4 relative '>
-          <Image source={require('../../assets/images/flower1.png')} 
-            className='w-24 h-[65%] object-cover ' />
-            <View className='font-bold text-xl flex-col items-center justify-center bg-[#F8DAE2] w-full h-[35%] mt-4'>
-              <Text>Flower bouquet</Text>
-              <Text>500 bath</Text>
-            </View>
-            <MaterialCommunityIcons name="cards-heart-outline" size={25}
-              color="black"  className=' absolute top-1 right-2 '/>
-          </View>
-          </View>
-
-          
-        </View>
+        <ShowseeAll name="carts" haf="carts" /> 
+     
+        <ProductShow products={carts} />
    
     </ScrollView>
 
