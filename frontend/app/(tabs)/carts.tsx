@@ -5,7 +5,7 @@ const route = useRouter();
 
   const handlePress = () => {
     //@ts-ignore
-    route.push('/paymennt');
+    route.push('/payment');
   }
 
 export default function FlowersScreen() {
@@ -13,7 +13,7 @@ export default function FlowersScreen() {
     <View style={{ flex: 1, padding: 16 }}>
      <Text>cart</Text>
 
-     <Link href="/paymennt" className=" bg-yellow-500 p-4 rounded-full ">
+     <Link href="/payment" className=" bg-yellow-500 p-4 rounded-full ">
         <Text> 
           pay
         </Text>
