@@ -2,6 +2,8 @@ import { Link } from "expo-router";
 import { Image, TouchableOpacity, View ,Text} from "react-native";
 import { useRouter } from "expo-router";
 import "./global.css"
+
+
 export default function Index() {
 
   const route = useRouter();

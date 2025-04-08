@@ -2,6 +2,7 @@ import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native'
 import React, { useState } from 'react'
 import { useRouter } from 'expo-router'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
+import Topbar from '../components/topbar'
 
 const products = [
   {
@@ -55,7 +56,9 @@ const AllProduct = () => {
   }
 
   return (
-    <View className="flex-col items-center justify-center pt-4">
+    
+    <View className="flex-col items-center justify-center">
+      <Topbar />
       <ScrollView
         className="w-full "
         contentContainerStyle={{ paddingTop: 0 }}

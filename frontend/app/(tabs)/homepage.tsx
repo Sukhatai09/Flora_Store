@@ -14,7 +14,7 @@ import {
 import ProductShow from '../components/ProductShow';
 import ShowseeAll from '../components/ShowseeAll';
 import ProductFav from '../components/ProductFav';
-
+import Topbar from '../components/topbar';
 
 const { width } = Dimensions.get('window');
 
@@ -132,7 +132,7 @@ export default function App() {
 
     
     <View className="flex-1 bg-white">
-    {/* Topbar อยู่ด้านบนแบบ fix */}
+    <Topbar />
 
 
     {/* ScrollView ข้างล่าง */}

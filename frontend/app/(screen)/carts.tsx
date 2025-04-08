@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Link, useRouter } from 'expo-router';
-
+import Topbar from '../components/topbar';
 const route = useRouter();
 
   const handlePress = () => {
@@ -10,7 +10,8 @@ const route = useRouter();
 
 export default function FlowersScreen() {
   return (
-    <View style={{ flex: 1, padding: 16 }}>
+    <View style={{ flex: 1 }}>
+      <Topbar />
      <Text>cart</Text>
 
      <Link href="/payment" className=" bg-yellow-500 p-4 rounded-full ">

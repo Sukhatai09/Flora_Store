@@ -1,13 +1,8 @@
-import { Stack, Tabs } from "expo-router"
-
+import { Stack, Tabs } from "expo-router";
+import Topbar from "../components/topbar";
 
 const Layout = () => {
-  return (
-    <Tabs>
-        
-     
-    </Tabs>
-  )
-}
+  return <Tabs screenOptions={{headerShown:false}}></Tabs>;
+};
 
-export default Layout
+export default Layout;
