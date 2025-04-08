@@ -5,6 +5,8 @@ import morgan from "morgan";
 import authRoutes from "./routes/authRoutes.js";
 import cookieParser from "cookie-parser";
 import flowerRoutes from "./routes/flowerRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 
 dotenv.config();
@@ -17,6 +19,8 @@ app.use(express.json());
 app.use(cookieParser());
 app.use('/api', authRoutes);
 app.use('/api',flowerRoutes);
+app.use('/api',orderRoutes);
+app.use('/api',userRoutes);
 
 
 app.get("/", (req, res) => {

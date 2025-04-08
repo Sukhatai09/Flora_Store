@@ -94,4 +94,16 @@ export const register = async (req, res) => {
   }
 };
 
+export const logout = async (req, res) => {
+  try{
+    res.clearCookie("token",{
+      httpOnly: true,
+      secure: false,
+      sameSite: "strict",
+    }); // Clear the cookie named "token"
+    res.status(200).json({ message: "Logout successful" });
+  } catch (err) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
 
