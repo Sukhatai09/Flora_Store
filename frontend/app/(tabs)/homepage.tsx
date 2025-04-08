@@ -16,10 +16,7 @@ import ShowseeAll from '../components/ShowseeAll';
 import ProductFav from '../components/ProductFav';
 import Topbar from '../components/topbar';
 
-
-
-export default function App() {
-  const { width } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 const carts = [
   {
@@ -103,6 +100,8 @@ const promote = [
     bgColor: '#B1F6BE', 
   },
 ];
+
+export default function App() {
   const flatListRef = useRef<FlatList>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoScroll, setIsAutoScroll] = useState(true);
