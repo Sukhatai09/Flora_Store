@@ -3,8 +3,11 @@ import React from 'react'
 
 const user = () => {
   return (
-    <View>
-      <Text>user</Text>
+    <View className='relative flex-1 items-center justify-center'>
+      <View className='absolute top-0 left-0 w-full h-[109] bg-[#FEACA6]'>
+
+      </View>
+      
     </View>
   )
 }

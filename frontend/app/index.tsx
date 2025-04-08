@@ -46,7 +46,7 @@ export default function Index() {
             </Text>
           </TouchableOpacity>
           <Text className="mt-4 text-lg font-bold text-[#000000] text-center">
-             Don’t have an account ?. <Link className="text-blue-500 " href={'/'}>Sign Up</Link>
+             Don’t have an account ?. <Link className="text-blue-500 " href={'/register'}>Sign Up</Link>
           </Text>
         </View>
       </View>

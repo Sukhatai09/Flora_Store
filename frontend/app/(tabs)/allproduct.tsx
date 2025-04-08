@@ -62,7 +62,7 @@ const AllProduct = () => {
     <View className="flex-col items-center justify-center">
       <Topbar />
       <ScrollView
-        className="w-full "
+        className="w-full"
         contentContainerStyle={{ paddingTop: 0 }}
         showsVerticalScrollIndicator={true}
       >
