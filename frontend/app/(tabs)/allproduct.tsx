@@ -4,46 +4,48 @@ import { useRouter } from 'expo-router'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import Topbar from '../components/topbar'
 
-const products = [
-  {
-    id: 1,
-    name: 'Flower bouquet',
-    price: '500 bath',
-    image: require('../../assets/images/flower1.png'),
-  },
-  {
-    id: 2,
-    name: 'Flower bouquet',
-    price: '500 bath',
-    image: require('../../assets/images/flower1.png'),
-  },
-  {
-    id: 3,
-    name: 'Flower bouquet',
-    price: '500 bath',
-    image: require('../../assets/images/flower1.png'),
-  },
-  {
-    id: 4,
-    name: 'Flower bouquet',
-    price: '500 bath',
-    image: require('../../assets/images/flower1.png'),
-  },
-  {
-    id: 5,
-    name: 'Flower bouquet',
-    price: '500 bath',
-    image: require('../../assets/images/flower1.png'),
-  },
-  {
-    id: 6,
-    name: 'Flower bouquet',
-    price: '500 bath',
-    image: require('../../assets/images/flower1.png'),
-  },
-]
+
 
 const AllProduct = () => {
+
+  const products = [
+    {
+      id: 1,
+      name: 'Flower bouquet',
+      price: '500 bath',
+      image: require('../../assets/images/flower1.png'),
+    },
+    {
+      id: 2,
+      name: 'Flower bouquet',
+      price: '500 bath',
+      image: require('../../assets/images/flower1.png'),
+    },
+    {
+      id: 3,
+      name: 'Flower bouquet',
+      price: '500 bath',
+      image: require('../../assets/images/flower1.png'),
+    },
+    {
+      id: 4,
+      name: 'Flower bouquet',
+      price: '500 bath',
+      image: require('../../assets/images/flower1.png'),
+    },
+    {
+      id: 5,
+      name: 'Flower bouquet',
+      price: '500 bath',
+      image: require('../../assets/images/flower1.png'),
+    },
+    {
+      id: 6,
+      name: 'Flower bouquet',
+      price: '500 bath',
+      image: require('../../assets/images/flower1.png'),
+    },
+  ]
   const router = useRouter()
   const [likedItems, setLikedItems] = useState<number[]>([])
 
