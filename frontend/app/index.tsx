@@ -8,7 +8,7 @@ export default function Index() {
 
   const handlePress = () => {
     //@ts-ignore
-    route.push('/homepage');
+    route.push('/allproduct');
   }
   return (
     <View className="flex-1 items-center justify-center relative">

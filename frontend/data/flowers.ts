@@ -1,17 +1,6 @@
-const flowers = [
-    {
-      id: '1',
-      name: 'กุหลาบแดง',
-      price: 50,
-      image: 'https://example.com/rose.jpg',
-    },
-    {
-      id: '2',
-      name: 'ทิวลิป',
-      price: 60,
-      image: 'https://example.com/tulip.jpg',
-    },
-  ];
-  
-  export default flowers;
-  
+interface Product {
+  id: number;
+  name: string;
+  price: string;
+  image: any; // Using 'any' for the require statement, but you might want to be more specific
+}
