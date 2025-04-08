@@ -7,7 +7,7 @@ import cookieParser from "cookie-parser";
 import flowerRoutes from "./routes/flowerRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
-
+import orderItemRoutes from "./routes/orderItemRoutes.js";
 
 dotenv.config();
 
@@ -21,6 +21,7 @@ app.use('/api', authRoutes);
 app.use('/api',flowerRoutes);
 app.use('/api',orderRoutes);
 app.use('/api',userRoutes);
+app.use('/api',orderItemRoutes);
 
 
 app.get("/", (req, res) => {
