@@ -1,124 +1,172 @@
-import React, { useState } from 'react'
-import { View, Text, TouchableOpacity, SafeAreaView, Modal, Button, ScrollView } from 'react-native'
-import { FontAwesome } from '@expo/vector-icons'
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
+import React, { useState } from "react";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
-const CheckoutScreen = () => {
-  const [dateText, setDateText] = useState('2025-04-06')   // วันที่เริ่มต้น
-  const [timeText, setTimeText] = useState('14:30')         // เวลาเริ่มต้น
-  const [showDateModal, setShowDateModal] = useState(false) // แสดง Modal สำหรับเลือกวันที่
-  const [showTimeModal, setShowTimeModal] = useState(false) // แสดง Modal สำหรับเลือกเวลา
 
-  // สร้างตัวเลือกวันที่และเวลา
-  const dateOptions = ['2025-04-06', '2025-04-07', '2025-04-08', '2025-04-09', '2025-04-10', '2025-04-11', '2025-04-12']
-  const timeOptions = ['14:30', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00']
+const payment: React.FC = () => {
+  const [dateOfBirth, setDateOfBirth] = useState(new Date());
+  const [timeOfBirth, setTimeOfBirth] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [unknownTime, setUnknownTime] = useState(false);
+  const [sex, setSex] = useState<string>();
+  const [status, setStatus] = useState<string>();
 
-  // ฟังก์ชันเลือกวันที่
-  const handleDateInput = () => {
-    setShowDateModal(true)
-  }
+  const handleDateConfirm = (event: any, selectedDate?: Date) => {
+    if (selectedDate) setDateOfBirth(selectedDate);
+    // setShowDatePicker(false);
+  };
 
-  // ฟังก์ชันเลือกเวลา
-  const handleTimeInput = () => {
-    setShowTimeModal(true)
-  }
+  const handleTimeConfirm = (event: any, selectedTime?: Date) => {
+    if (selectedTime) setTimeOfBirth(selectedTime);
+    // setShowTimePicker(false);
+  };
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#F9FAFB', padding: 16 }}>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        setShowDatePicker(false);
+        setShowTimePicker(false);
+        Keyboard.dismiss();
+      }}
+    >
+      <View className="flex flex-col gap-4 mt-12">
+        {/* ชื่อ */}
+        <View className="p-2">
+          <Text className="font-PromptMedium text-2xl ml-2 mb-4">ชื่อ</Text>
+          <TextInput
+            className="border-4 border-secondary pt-5 pb-3 px-5 rounded-xl text-2xl font-PromptMedium"
+          />
+        </View>
 
-      {/* Address */}
-      <Text style={{ fontSize: 35, fontWeight: 'bold', marginBottom: 8, }}>Address</Text>
-      <View style={{ borderWidth: 2, borderColor: '#AEE2FF', borderRadius: 10, padding: 16, marginBottom: 24 }}>
-        <Text>ชื่อ: John Doe ที่อยู่: 123 Maple Street</Text>
-        <Text>เมือง: Springfield จังหวัด: CA</Text>
-        <Text>รหัสไปรษณีย์: 90210</Text>
-        <Text>เบอร์: 022222223</Text>
-      </View>
+        {/* วัน/เดือน/ปีเกิด */}
+        <View className="p-2">
+          <Text className="font-PromptMedium text-2xl ml-2 mb-4">
+            วัน/เดือน/ปีเกิด
+          </Text>
+          <TouchableOpacity
+            onPress={() => setShowDatePicker(true)}
+            activeOpacity={0.7}
+          >
+            <View className="border-4 border-secondary pt-5 pb-3 px-5 rounded-xl">
+              <Text className="text-2xl font-PromptMedium">
+                {dateOfBirth.toLocaleDateString("th-TH", {
+                  day: "2-digit",
+                  month: "long",
+                  year: "numeric",
+                })}
+              </Text>
+            </View>
+          </TouchableOpacity>
 
-      {/* Date / Time */}
-      <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
-        <TouchableOpacity onPress={handleDateInput} style={{ padding: 12 }}>
-          <FontAwesome name="calendar" size={32} color="#4A90E2" />
-        </TouchableOpacity>
+          {showDatePicker && (
+            <DateTimePicker
+              value={dateOfBirth}
+              mode="date"
+              display="spinner"
+              onChange={handleDateConfirm}
+            />
+          )}
+        </View>
 
-        <TouchableOpacity onPress={handleTimeInput} style={{ padding: 12 }}>
-          <FontAwesome name="clock-o" size={32} color="#4A90E2" />
-        </TouchableOpacity>
-      </View>
-      <Text style={{ fontSize: 18, color: '#666', marginBottom: 24 }}>
-        📅 {dateText} 🕒 {timeText}
-      </Text>
+        {/* เวลาเกิด + เช็คบ็อกซ์ */}
+        <View className="p-2">
+          <View className="flex flex-row items-center justify-between">
+            <Text className="font-PromptMedium text-2xl ml-2 mb-4">
+              เวลาเกิด
+            </Text>
+          </View>
 
-      {/* Date Modal */}
-      <Modal visible={showDateModal} animationType="slide" transparent={true}>
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.3)' }}>
-          <View style={{ backgroundColor: 'white', padding: 24, borderRadius: 12, width: '80%' }}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 16 }}>เลือกวันที่</Text>
-            <ScrollView>
-              {dateOptions.map((date, index) => (
-                <TouchableOpacity key={index} onPress={() => {
-                  setDateText(date)
-                  setShowDateModal(false)
-                }} style={{ padding: 12, borderBottomWidth: 1, borderBottomColor: '#ddd' }}>
-                  <Text style={{ fontSize: 18 }}>{date}</Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-            <TouchableOpacity onPress={() => setShowDateModal(false)} style={{ marginTop: 16, padding: 12, backgroundColor: '#4A90E2', borderRadius: 8 }}>
-              <Text style={{ color: 'white', textAlign: 'center', fontWeight: 'bold' }}>ปิด</Text>
+          {!unknownTime && (
+            <TouchableOpacity
+              onPress={() => setShowTimePicker(true)}
+              activeOpacity={0.7}
+            >
+              <View className="border-4 border-secondary pt-5 pb-3 px-5 rounded-xl">
+                <Text className="text-2xl font-PromptMedium">
+                  {timeOfBirth.toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </Text>
+              </View>
             </TouchableOpacity>
+          )}
+
+          {showTimePicker && !unknownTime && (
+            <DateTimePicker
+              value={timeOfBirth}
+              mode="time"
+              display="spinner"
+              onChange={handleTimeConfirm}
+            />
+          )}
+
+          <View className="flex flex-row items-center gap-2 mt-3">
+            <View className="rounded-full border-2 border-secondary">
+              
+            </View>
+            <Text className="text-xl font-PromptMedium">
+              ไม่ทราบเวลาเกิด
+            </Text>
           </View>
         </View>
-      </Modal>
 
-      {/* Time Modal */}
-      <Modal visible={showTimeModal} animationType="slide" transparent={true}>
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.3)' }}>
-          <View style={{ backgroundColor: 'white', padding: 24, borderRadius: 12, width: '80%' }}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 16 }}>เลือกเวลา</Text>
-            <ScrollView>
-              {timeOptions.map((time, index) => (
-                <TouchableOpacity key={index} onPress={() => {
-                  setTimeText(time)
-                  setShowTimeModal(false)
-                }} style={{ padding: 12, borderBottomWidth: 1, borderBottomColor: '#ddd' }}>
-                  <Text style={{ fontSize: 18 }}>{time}</Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-            <TouchableOpacity onPress={() => setShowTimeModal(false)} style={{ marginTop: 16, padding: 12, backgroundColor: '#4A90E2', borderRadius: 8 }}>
-              <Text style={{ color: 'white', textAlign: 'center', fontWeight: 'bold' }}>ปิด</Text>
-            </TouchableOpacity>
+        {/* เพศ */}
+        <View className="p-2">
+          <Text className="font-PromptMedium text-2xl ml-2 mb-4">เพศ</Text>
+          <View className="flex flex-row items-center gap-4">
+            <View className="flex flex-row items-center gap-2">
+              <View className="rounded-full border-2 border-secondary">
+                
+              </View>
+              <Text className="text-2xl font-PromptMedium">ชาย</Text>
+            </View>
+            <View className="flex flex-row items-center gap-2 ">
+              <View className="rounded-full border-2 border-secondary">
+               
+              </View>
+              <Text className="text-2xl font-PromptMedium">หญิง</Text>
+            </View>
           </View>
         </View>
-      </Modal>
-
-      {/* Summary */}
-      <Text style={{ fontSize: 35, fontWeight: 'bold', marginBottom: 8 }}>Summary</Text>
-      <View style={{ borderWidth: 2, borderColor: '#D9B9FF', borderRadius: 10, padding: 16, marginBottom: 24 }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 }}>
-          <Text>Rose bouquet x2</Text>
-          <Text>$1000</Text>
+        {/* สถานะ */}
+        <View className="p-2">
+          <Text className="font-PromptMedium text-2xl ml-2 mb-4">
+            สถานะความสัมพันธ์
+          </Text>
+          <View className="flex flex-row items-center gap-4">
+            <View className="flex flex-row items-center gap-2">
+              <View className="rounded-full border-2 border-secondary">
+                
+              </View>
+              <Text className="text-2xl font-PromptMedium">โสด</Text>
+            </View>
+            <View className="flex flex-row items-center gap-2 ">
+              <View className="rounded-full border-2 border-secondary">
+                
+              </View>
+              <Text className="text-2xl font-PromptMedium">มีคู่</Text>
+            </View>
+          </View>
         </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 }}>
-          <Text>shipping</Text>
-          <Text>free</Text>
-        </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 8 }}>
-          <Text>2 items</Text>
-          <Text>total: $1000</Text>
+        <View className="w-[90%] mx-auto mt-5 ">
+          <TouchableOpacity className="bg-secondary rounded-xl py-4 mt-6">
+            <Text className="text-center text-white text-2xl font-PromptMedium">
+              บันทึกข้อมูล
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
+    </TouchableWithoutFeedback>
+  );
+};
 
-      {/* Confirm Button */}
-      <View style={{ alignItems: 'center' }}>
-        <TouchableOpacity style={{ backgroundColor: '#4A90E2', paddingHorizontal: 24, paddingVertical: 12, borderRadius: 25 }}>
-          <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white' }}>Confirm</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  )
-}
-
-export default CheckoutScreen
-
-
+export default payment;

@@ -15,11 +15,11 @@ export default function FlowersScreen() {
       <Topbar />
      <Text>cart</Text>
 
-     <Link href="/payment" className=" bg-yellow-500 p-4 rounded-full ">
+     <TouchableOpacity onPress={handlePress} className=" bg-yellow-500 p-4 rounded-full ">
         <Text> 
           pay
         </Text>
-      </Link>
+      </TouchableOpacity>
     </View>
 
     

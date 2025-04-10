@@ -1,7 +1,9 @@
 import { Stack } from "expo-router";
 
 const Screenlayout = () => {
-  return <Stack></Stack>;
+  return <Stack>
+    
+  </Stack>;
 };
 
 export default Screenlayout;
