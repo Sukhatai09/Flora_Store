@@ -8,5 +8,7 @@ export default function Layout() {
 
   return <Stack screenOptions={{ headerShown: !showNavbar }}>
     <Stack.Screen name="index" />
+    <Stack.Screen name="(tabs)" />
+    <Stack.Screen name="(screen)" />
   </Stack>;
 }
