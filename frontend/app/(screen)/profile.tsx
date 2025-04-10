@@ -3,15 +3,20 @@ import React from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { router, useRouter } from "expo-router";
+import {useAuthStore} from "../../store/flora_store";
 
 const profile = () => {
   const route = useRouter();
+  const user = useAuthStore((state) => state.customer);
+
+  console.log("user", user);
+  
   const handlePress = () => {
     //@ts-ignore
     route.push("/");
   };
   const bockData = 
-    {  name: "cream",email: "65112429@dpu.ac.th",phone: "085258697", image:"../../assets/images/cream2.jpg"}
+    {  name:`${user?.first_name} ${user?.last_name}`, email: user?.email,phone: user?.phone_number, image:user?.image_url}
   return (
     <View className="relative flex-1 items-center justify-center">
       <View className="absolute top-0 left-0 w-full h-[109] bg-[#FEACA6]" >

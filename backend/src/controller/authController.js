@@ -52,7 +52,16 @@ export const login = async(req, res) => {
     });
     res.status(200).json({
       message: "Login successful",
-    
+      user: {
+        customer_id: userData.id,
+        email: userData.email,
+        first_name: userData.first_name,
+        last_name: userData.last_name,
+        phone_number: userData.phone_number,
+        image_url: userData.image_url,
+        address: userData.address,
+      },
+      token: token,
     });
 
   }catch (err) {

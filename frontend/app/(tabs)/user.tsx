@@ -3,9 +3,11 @@ import React from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { router, useRouter } from "expo-router";
+import {useAuthStore} from "../../store/flora_store";
 
 const user = () => {
   const route = useRouter();
+  const logout = useAuthStore((state) => state.logout);
   const handlePress = () => {
     //@ts-ignore
     route.push("/");
