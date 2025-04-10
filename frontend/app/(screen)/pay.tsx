@@ -25,7 +25,7 @@ export default function Pay() {
         className="bg-[#85BEFF] py-3 px-6 rounded-xl"
         onPress={() => alert(`ที่อยู่: ${address}`)}
       >
-        <Text className="text-black text-lg">confirm</Text>
+        <Text className="text-black text-lg">confirmm</Text>
       </TouchableOpacity>
     </View>
   );
