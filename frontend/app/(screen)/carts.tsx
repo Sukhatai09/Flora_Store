@@ -1,27 +1,22 @@
 import { View, Text, TouchableOpacity } from 'react-native';
-import { Link, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import Topbar from '../components/topbar';
-const route = useRouter();
-
- 
 
 export default function FlowersScreen() {
+  const router = useRouter();
+
   const handlePress = () => {
-    //@ts-ignore
-    route.push('/payment');
-  }
+    router.push('/(screen)/pay');
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <Topbar />
-     <Text>cart</Text>
+      <Text>cart</Text>
 
-     <Link href="/payment" className=" bg-yellow-500 p-4 rounded-full ">
-        <Text> 
-          pay
-        </Text>
-      </Link>
+      <TouchableOpacity onPress={handlePress} style={{ backgroundColor: '#facc15', padding: 16, borderRadius: 999 }}>
+        <Text>pay</Text>
+      </TouchableOpacity>
     </View>
-
-    
   );
 }
