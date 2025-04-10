@@ -10,6 +10,8 @@ const profile = () => {
     //@ts-ignore
     route.push("/");
   };
+  const bockData = 
+    {  name: "cream",email: "65112429@dpu.ac.th",phone: "085258697", image:"../../assets/images/cream2.jpg"}
   return (
     <View className="relative flex-1 items-center justify-center">
       <View className="absolute top-0 left-0 w-full h-[109] bg-[#FEACA6]" >
@@ -22,7 +24,7 @@ const profile = () => {
       <View className="flex-1 items-center justify-start mt-40 w-full  ">
         <View className="flex-1 flex-row items-start w-full  justify-center mb-5  ml-20">
           <Image
-            source={require("../../assets/images/backgroundindex.png")}
+            source={require("../../assets/images/cream2.jpg")}
             className=" w-44 h-44 rounded-full mr-11 items-center"
             resizeMode="cover"
           />
@@ -34,30 +36,33 @@ const profile = () => {
 
         <View className="absolute top-64 gap-10 left-0 w-full items-center" >
           <View>
-            <TouchableOpacity
+          <Text className="text-2xl  font-Prompt">Name :</Text>
+            <View
               className="bg-[#FFCFDA] w-[300px] h-[50px] rounded-full items-center justify-center"
-              onPress={() => route.push("/(screen)/profile")}
+              
             >
-              <Text className="text-xl font-bold text-black">📸 Profile</Text>
-            </TouchableOpacity>
+              <Text className="text-xl font-bold text-black">{bockData.name}</Text>
+            </View>
           </View>
 
           <View>
-            <TouchableOpacity
+          <Text className="text-xl  font-Prompt ">Email :</Text>
+            <View
               className="bg-[#FFCFDA] w-[300px] h-[50px] rounded-full items-center justify-center"
-              onPress={handlePress}
+              
             >
-              <Text className="text-xl font-bold text-black">❤️ Favorite</Text>
-            </TouchableOpacity>
+              <Text className="text-xl font-bold text-black">{bockData.email}</Text>
+            </View>
           </View>
 
           <View>
-            <TouchableOpacity
+          <Text className="text-2xl  font-Prompt">Phone :</Text>
+            <View
               className="bg-[#FFCFDA] w-[300px] h-[50px] rounded-full items-center justify-center"
-              onPress={handlePress}
+              
             >
-              <Text className="text-xl font-bold text-black">🛒 Shopping Cart</Text>
-            </TouchableOpacity>
+              <Text className="text-xl font-bold text-black">{bockData.phone}</Text>
+            </View>
           </View>
         </View>
 
