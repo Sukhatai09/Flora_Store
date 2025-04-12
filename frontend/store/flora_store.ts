@@ -3,6 +3,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Contants from 'expo-constants';
 
+
 const API_URL = Contants.expoConfig?.extra?.API_URL ;
 
 interface Customer {
@@ -20,6 +21,8 @@ interface AuthStore {
     token: string | null;
     login: (email: string, password: string) => Promise<void>;
     logout: () => Promise<void>;
+    checkLoginStatus: () => Promise<void>;
+    refresh: () => Promise<void>;
 
 }
 
@@ -33,6 +36,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
             const customer = response.data.user;
             const token = response.data.token;
             await AsyncStorage.setItem('token', token);
+            await AsyncStorage.setItem('customer', JSON.stringify(customer));
             set({ token, customer, isLoggedIn: true });
         } catch (error) {
             console.error('Login error:', error);
@@ -41,6 +45,34 @@ export const useAuthStore = create<AuthStore>((set) => ({
     logout: async () => {
         await axios.get(`${API_URL}/logout`);
         await AsyncStorage.removeItem('token');
+        await AsyncStorage.removeItem('customer');
         set({ token: null, customer: null, isLoggedIn: false });
     },
+    refresh: async () => {
+        try{
+            const oldUser = await AsyncStorage.getItem('customer');
+            
+            if (oldUser) {
+                const user = JSON.parse(oldUser);
+                const res = await axios.get(`${API_URL}/user/${user.customer_id}` )
+                set({ customer: res.data });
+            }
+        }catch(error) {
+            console.error('Refresh error:', error);
+        }
+    },
+    checkLoginStatus: async () => {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            const customer = await AsyncStorage.getItem('customer');
+            if (token && customer) {
+                set({ token, customer: JSON.parse(customer), isLoggedIn: true });
+            } else {
+                set({ token: null, customer: null, isLoggedIn: false });
+            }
+        } catch (error) {
+            console.error('Check login status error:', error);
+        }
+    },
+
 }));

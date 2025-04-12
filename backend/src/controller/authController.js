@@ -53,7 +53,7 @@ export const login = async(req, res) => {
     res.status(200).json({
       message: "Login successful",
       user: {
-        customer_id: userData.id,
+        customer_id: userData.customer_id,
         email: userData.email,
         first_name: userData.first_name,
         last_name: userData.last_name,
@@ -115,4 +115,5 @@ export const logout = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 }
+
 

@@ -1,14 +1,25 @@
 import { Image, TextInput, View, Text,TouchableOpacity } from "react-native";
-import { Link, useRouter } from "expo-router";
+import { Link, useRouter,Redirect  } from "expo-router";
 import "./global.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuthStore } from "@/store/flora_store";
+
 
 export default function Index() {
   const route = useRouter();
+  const refresh = useAuthStore((state) => state.refresh);
+  const checkLoginStatus = useAuthStore((state) => state.checkLoginStatus);
+  const customer = useAuthStore((state) => state.customer);
   const  login  = useAuthStore((state) => state.login);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  checkLoginStatus();
+  if (customer) {
+    return <Redirect href="/(tabs)/homepage" />;
+  }
+  
+
   const handlePress = async() => {
     try {
       await login(email, password);
