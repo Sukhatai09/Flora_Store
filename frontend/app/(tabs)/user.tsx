@@ -11,10 +11,13 @@ const API_URL = Contants.expoConfig?.extra?.API_URL ;
 
 
 const user = () => {
+  
   const route = useRouter();
   const logout = useAuthStore((state) => state.logout);
   const customer = useAuthStore((state) => state.customer);
-  const imageUri = `${API_URL?.replace(/\/api$/, "")}/${customer?.image_url?.replace(/\\/g, '/')}`;
+  const imageUri = `${API_URL?.replace(/\/api$/, "").replace(/\/$/, "")}/${customer?.image_url?.replace(/^(\.\/)/, '').replace(/\\/g, '/')}`;
+
+  
 
   console.log(imageUri)
   const handlePress = () => {

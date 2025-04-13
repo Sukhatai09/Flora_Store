@@ -13,8 +13,10 @@ const profile = () => {
   const route = useRouter();
   const user = useAuthStore((state) => state.customer);
 
-  const imageUri = `${API_URL?.replace(/\/api$/, "")}/${user?.image_url?.replace(/\\/g, '/')}`;
-  
+  const imageUri = `${API_URL?.replace(/\/api$/, "").replace(/\/$/, "")}/${user?.image_url?.replace(/^(\.\/)/, '').replace(/\\/g, '/')}`;
+
+
+  console.log(imageUri)
   
   const handlePress = () => {
     //@ts-ignore

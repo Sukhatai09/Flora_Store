@@ -7,29 +7,79 @@ import {
   ScrollView,
 } from "react-native";
 import React, { useState } from "react";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useRouter } from "expo-router";
+import { useAuthStore } from "@/store/flora_store";
+import * as ImagePicker from "expo-image-picker";
+import axios from "axios";
+import Contants from "expo-constants";
 
-const bockData = {
-  name: "cream",
-  email: "65112429@dpu.ac.th",
-  phone: "085258697",
-  image: "../../assets/images/cream2.jpg",
-  Addess: "1234",
-};
+const API_URL = Contants.expoConfig?.extra?.API_URL;
 
-const editProfile = () => {
+const EditProfile = () => {
+  const refresh = useAuthStore((state) => state.refresh);
+  const customer = useAuthStore((state) => state.customer);
   const route = useRouter();
-  const [name, setName] = useState(bockData.name);
-  const [image, setImage] = useState(bockData.image);
-  const [email, setEmail] = useState(bockData.email);
-  const [phone, setPhone] = useState(bockData.phone);
-  const [addess, setAddess] = useState(bockData.Addess);
 
-  const handleUpdate = () => {
+  const imageUri = `${API_URL?.replace(/\/api$/, "").replace(
+    /\/$/,
+    ""
+  )}/${customer?.image_url?.replace(/^(\.\/)/, "").replace(/\\/g, "/")}`;
+
+  const [name, setName] = useState(customer?.first_name + " " + customer?.last_name);
+  const [image, setImage] = useState(imageUri);
+  const [email, setEmail] = useState(`${customer?.email}`);
+  const [phone, setPhone] = useState(`${customer?.phone_number}`);
+  const [address, setAddress] = useState(`${customer?.address}`);
+  const [imageFile, setImageFile] = useState<ImagePicker.ImagePickerAsset | null>(null); // <- เพิ่มตัวแปรเก็บไฟล์ใหม่
+
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images, 
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+    if (!result.canceled) {
+      const selectedAsset = result.assets[0];
+      setImage(selectedAsset.uri);
+      setImageFile(selectedAsset); // เก็บไฟล์ไว้ใช้ตอนอัพโหลด
+    }
+  };
+
+  const handleUpdate = async () => {
+    const formData = new FormData();
+    formData.append("first_name", name.split(" ")[0]);
+    formData.append("last_name", name.split(" ")[1]);
+    formData.append("email", email);
+    formData.append("phone_number", phone);
+    formData.append("address", address);
+
+    if (imageFile) {
+      const uri = imageFile.uri;
+      const filename = uri.split("/").pop() || "image.jpg";
+      const match = /\.(\w+)$/.exec(filename);
+      const type = match ? `image/${match[1]}` : `image`;
+
+      formData.append("image_url", {
+        uri,
+        name: filename,
+        type,
+      } as any);
+    }
+
+    await axios.put(`${API_URL}/user/${customer?.customer_id}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    await refresh();
     alert(
-      "name : " + name + "\n" + "email: " + email + "\n" + "phone: " + phone
+      "name : " + name +
+      "\nemail: " + email +
+      "\nphone: " + phone +
+      "\naddress: " + address
     );
   };
 
@@ -57,11 +107,17 @@ const editProfile = () => {
       >
         {/* Profile Image */}
         <View className="flex-row items-center justify-center mb-10">
-          <Image
-            source={require("../../assets/images/cream2.jpg")}
-            className="w-44 h-44 rounded-full"
-            resizeMode="cover"
-          />
+          <TouchableOpacity onPress={pickImage}>
+            <Image
+              source={{
+                uri: image
+                  ? image
+                  : "https://media.istockphoto.com/id/1278459951/th/เวคเตอร์/ตัวการ์ตูนดอกไม้น่ารัก.jpg",
+              }}
+              className="w-44 h-44 rounded-full mr-15 items-center"
+              resizeMode="cover"
+            />
+          </TouchableOpacity>
         </View>
 
         {/* Input Fields */}
@@ -71,7 +127,7 @@ const editProfile = () => {
             <Text className="text-2xl font-Prompt">Name :</Text>
             <TextInput
               value={name}
-              onChangeText={setName}
+              onChangeText={(text) => setName(text)}
               className="bg-[#FFCFDA] w-[300px] h-[50px] rounded-full text-center text-xl mt-2"
             />
           </View>
@@ -80,8 +136,9 @@ const editProfile = () => {
           <View>
             <Text className="text-2xl font-Prompt">Email :</Text>
             <TextInput
+              readOnly
               value={email}
-              onChangeText={setEmail}
+              onChangeText={(text) => setEmail(text)}
               className="bg-[#FFCFDA] w-[300px] h-[50px] rounded-full text-center text-xl mt-2"
             />
           </View>
@@ -91,7 +148,7 @@ const editProfile = () => {
             <Text className="text-2xl font-Prompt">Phone :</Text>
             <TextInput
               value={phone}
-              onChangeText={setPhone}
+              onChangeText={(text) => setPhone(text)}
               className="bg-[#FFCFDA] w-[300px] h-[50px] rounded-full text-center text-xl mt-2"
             />
           </View>
@@ -100,9 +157,11 @@ const editProfile = () => {
           <View>
             <Text className="text-2xl font-Prompt">Address :</Text>
             <TextInput
-              value={addess}
-              onChangeText={setAddess}
+              value={address}
+              onChangeText={(text) => setAddress(text)}
               className="bg-[#FFCFDA] w-[300px] h-[50px] rounded-full text-center text-xl mt-2"
+              multiline={true}
+              scrollEnabled={true}
             />
           </View>
 
@@ -121,4 +180,4 @@ const editProfile = () => {
   );
 };
 
-export default editProfile;
+export default EditProfile;
