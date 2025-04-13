@@ -13,7 +13,7 @@ const ProductFav = ({ products }: { products: Product[] }) => {
             {products.map((item, index) => (
               <TouchableOpacity
                 key={index}
-                className="bg-[#C6A6FE] items-center w-[120px] h-[150px] py-4 relative"
+                className="bg-[#DDCDF7] items-center w-[120px] h-[150px] py-4 relative"
          
               >
                 <Image source={item.image} className="w-24 h-[65%] object-cover" />
