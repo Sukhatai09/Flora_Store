@@ -22,7 +22,7 @@ interface AuthStore {
     login: (email: string, password: string) => Promise<void>;
     logout: () => Promise<void>;
     checkLoginStatus: () => Promise<void>;
-    refresh: () => Promise<void>;
+    refresh: (id:string) => Promise<void>;
 
 }
 
@@ -48,13 +48,15 @@ export const useAuthStore = create<AuthStore>((set) => ({
         await AsyncStorage.removeItem('customer');
         set({ token: null, customer: null, isLoggedIn: false });
     },
-    refresh: async () => {
+    refresh: async (id) => {
         try{
             const oldUser = await AsyncStorage.getItem('customer');
             
             if (oldUser) {
                 const user = JSON.parse(oldUser);
-                const res = await axios.get(`${API_URL}/user/${user.customer_id}` )
+                const res = await axios.get(`${API_URL}/user/${id}` )
+                
+                await AsyncStorage.setItem('customer', JSON.stringify(res.data)); // เพิ่มตรงนี้
                 set({ customer: res.data });
             }
         }catch(error) {

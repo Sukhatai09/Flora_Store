@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Image } from "react-native";
-import React from "react";
+import React,{useEffect} from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { router, useRouter } from "expo-router";
@@ -16,10 +16,31 @@ const user = () => {
   const logout = useAuthStore((state) => state.logout);
   const customer = useAuthStore((state) => state.customer);
   const imageUri = `${API_URL?.replace(/\/api$/, "").replace(/\/$/, "")}/${customer?.image_url?.replace(/^(\.\/)/, '').replace(/\\/g, '/')}`;
+  const refresh = useAuthStore((state) => state.refresh);
 
+  // useEffect(() => {
+  //   const fetchCustomerData = async () => {
+  //     await refresh();
+  //     console.log(customer)
+  //   }
+  //   fetchCustomerData();
+    
+  // }
+  // ,[])
   
 
-  console.log(imageUri)
+  // console.log(imageUri)
+  // useEffect(() => {
+  //   const fetchCustomerData = async () => {
+  //     if (customer) {
+  //       await refresh(`${customer?.customer_id}`);
+  //     }
+  //   };
+  //   fetchCustomerData();
+  // }
+  // ,[])
+  
+ 
   const handlePress = () => {
     logout();
     route.push("/");

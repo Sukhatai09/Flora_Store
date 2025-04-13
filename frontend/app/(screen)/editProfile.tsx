@@ -74,7 +74,7 @@ const EditProfile = () => {
       },
     });
 
-    await refresh();
+    // await refresh(`${customer?.customer_id}`); // เรียกใช้ refresh หลังจากอัพเดตข้อมูลเสร็จ
     alert(
       "name : " + name +
       "\nemail: " + email +
@@ -83,12 +83,17 @@ const EditProfile = () => {
     );
   };
 
+  const handleBack =() => {
+    
+    route.back();
+  };
+
   return (
     <View className="flex-1 bg-white">
       <View className="absolute top-0 left-0 w-full h-[109] bg-[#FEACA6] z-10">
         <TouchableOpacity
           className="flex-1 items-start justify-center ml-5 mt-10 mb-3"
-          onPress={() => route.back()}
+          onPress={handleBack}
         >
           <Text>
             <AntDesign name="arrowleft" size={40} color="black" />{" "}
