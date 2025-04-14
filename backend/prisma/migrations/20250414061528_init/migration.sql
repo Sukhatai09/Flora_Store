@@ -18,8 +18,11 @@ CREATE TABLE "Customer" (
     "first_name" TEXT NOT NULL,
     "last_name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
     "phone_number" TEXT NOT NULL,
-    "address" TEXT NOT NULL,
+    "role" TEXT NOT NULL DEFAULT 'user',
+    "image_url" TEXT,
+    "address" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -32,7 +35,7 @@ CREATE TABLE "Order" (
     "customer_id" TEXT NOT NULL,
     "order_date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "total_amount" INTEGER NOT NULL,
-    "status" BOOLEAN NOT NULL,
+    "status" TEXT NOT NULL DEFAULT 'padding',
     "shipping_address" TEXT NOT NULL,
     "payment_method" TEXT NOT NULL,
 

@@ -8,6 +8,10 @@ import flowerRoutes from "./routes/flowerRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import orderItemRoutes from "./routes/orderItemRoutes.js";
+import cartRoutes from "./routes/cartRoutes.js";
+import cartItemRoutes from "./routes/cartItemRoutes.js";
+import flowerLikeRoutes from "./routes/flowerLikeRoutes.js";
+
 
 dotenv.config();
 
@@ -22,6 +26,9 @@ app.use('/api',flowerRoutes);
 app.use('/api',orderRoutes);
 app.use('/api',userRoutes);
 app.use('/api',orderItemRoutes);
+app.use('/api',cartRoutes);
+app.use('/api',cartItemRoutes);
+app.use('/api',flowerLikeRoutes);
 
 
 app.get("/", (req, res) => {
