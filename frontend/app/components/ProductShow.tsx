@@ -1,17 +1,21 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react'
 import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { useRouter } from 'expo-router';
 interface Product {
-  id: number;
+  id: string;
   name: string;
   price: string;
   image: any; // Using 'any' for the require statement, but you might want to be more specific
 }
 const ProductShow = ({ products }: { products: Product[] }) => {
+  const router = useRouter()
   return (
    <View className="flex-row flex-wrap gap-4 mt-4 px-2">
             {products.map((item, index) => (
               <TouchableOpacity
+              // @ts-ignore
+              onPress={() => router.push(`/(screen)/${item.id}`)}
                 key={index}
                 className="bg-[#DDCDF7] items-center w-[120px] h-[150px] py-4 relative"
          

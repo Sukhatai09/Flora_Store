@@ -1,8 +1,9 @@
 import express from "express";
-import { getallOrderItem, createOrderItem} from "../controller/orderItemController.js";
+import { getallOrderItem, createOrderItem,deleteOrderItem} from "../controller/orderItemController.js";
 
 const router = express.Router();
 router.get("/orderItem",getallOrderItem);
-router.post("/orderItem", createOrderItem); 
+router.post("/orderItem", createOrderItem);
+router.delete("/orderItem/:id", deleteOrderItem); 
 
 export default router;

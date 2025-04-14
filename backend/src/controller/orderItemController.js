@@ -2,6 +2,7 @@ import z from "zod";
 import {
   getAllOrderItemService,
   createOrderItemService,
+  deleteOrderItemService,
 } from "../service/orderItemService.js";
 import prisma from "../prismaClient.js";
 export const orderItemSchema = z.object({
@@ -65,3 +66,24 @@ export const createOrderItem = async (req, res) => {
     }
   }
 };
+export const deleteOrderItem = async (req, res) => {
+  try{
+    const {id} = req.params;
+    const orderItem = await deleteOrderItemService(id);
+    if (!orderItem) {
+      return res.status(404).json({ message: "Order item not found" });
+    }
+    res.status(200).json({
+      message: "Order item deleted successfully",
+      data: orderItem,
+    });
+
+  }catch (err) {
+    if (err instanceof z.ZodError) {
+      res.status(400).json({ message: err.errors });
+    } else {
+      console.error(err);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+}

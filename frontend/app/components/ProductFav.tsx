@@ -2,7 +2,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react'
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 interface Product {
-  id: number;
+  id: string;
   name: string;
   price: string;
   image: any; // Using 'any' for the require statement, but you might want to be more specific
