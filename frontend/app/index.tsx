@@ -1,13 +1,33 @@
 import { Image, TextInput, View, Text,TouchableOpacity } from "react-native";
-import { Link, useRouter } from "expo-router";
+import { Link, useRouter,Redirect  } from "expo-router";
 import "./global.css";
+import { useState, useEffect } from "react";
+import { useAuthStore } from "@/store/flora_store";
+
 
 export default function Index() {
   const route = useRouter();
+  const refresh = useAuthStore((state) => state.refresh);
+  const checkLoginStatus = useAuthStore((state) => state.checkLoginStatus);
+  const customer = useAuthStore((state) => state.customer);
+  const  login  = useAuthStore((state) => state.login);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handlePress = () => {
-    //@ts-ignore
-    route.push("/allproduct");
+  checkLoginStatus();
+  if (customer) {
+    return <Redirect href="/(tabs)/homepage" />;
+  }
+  
+
+  const handlePress = async() => {
+    try {
+      await login(email, password);
+      route.push("/(tabs)/allproduct");
+    } catch (error) {
+      console.error("Login error:", error);
+    }
+    
   };
   return (
     <View className="flex-1 items-center justify-center relative">
@@ -20,7 +40,7 @@ export default function Index() {
         <View className="mb-14 gap-5">
           <View>
           <Text className="text-2xl  font-Prompt">Email :</Text>
-          <TextInput 
+          <TextInput value={email} onChangeText={(text) => setEmail(text)}
             className="bg-white w-[300px] h-[50px] rounded-full pl-4"
 
             placeholder="username"
@@ -30,7 +50,7 @@ export default function Index() {
 
           <View>
           <Text className="text-2xl  font-Prompt">Password :</Text>
-          <TextInput 
+          <TextInput value={password} onChangeText={(text) => setPassword(text)}
             className="bg-white w-[300px] h-[50px] rounded-full pl-4 mt-2"
             placeholder="password"
             secureTextEntry={true}
