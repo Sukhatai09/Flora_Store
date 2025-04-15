@@ -38,7 +38,7 @@
       "typedRoutes": true
     },
     "extra":{
-      "API_URL": "https://flora.loca.lt/api"
+      "API_URL": "https://72ae-1-46-26-246.ngrok-free.app/api"
     }
   }
 }

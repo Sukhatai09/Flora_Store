@@ -15,71 +15,27 @@ import ProductShow from '../components/ProductShow';
 import ShowseeAll from '../components/ShowseeAll';
 import ProductFav from '../components/ProductFav';
 import Topbar from '../components/topbar';
+import axios from 'axios'
+import Constants from 'expo-constants'
+
+const API_URL = Constants.expoConfig?.extra?.API_URL
+
+interface Product {
+  flower_id: string
+  name: string
+  description: string
+  price: number
+  image_url: string
+  stock_quantity: number
+}
 
 const { width } = Dimensions.get('window');
 
-const carts = [
-  {
-    id: "1",
-    name: 'Flower bouquet',
-    price: '500 bath',
-    image: require('../../assets/images/flower1.png'),
-  },
-  {
-    id: "2",
-    name: 'Flower bouquet',
-    price: '500 bath',
-    image: require('../../assets/images/flower1.png'),
-  },
-  {
-    id: "3",
-    name: 'Flower bouquet',
-    price: '500 bath',
-    image: require('../../assets/images/flower1.png'),
-  },
-]
 
-const favorite = [
-  {
-    id: "1",
-    name: 'Flower bouquet',
-    price: '500 bath',
-    image: require('../../assets/images/flower1.png'),
-  },
-  {
-    id: "2",
-    name: 'Flower bouquet',
-    price: '500 bath',
-    image: require('../../assets/images/flower1.png'),
-  },
-  {
-    id: "3",
-    name: 'Flower bouquet',
-    price: '500 bath',
-    image: require('../../assets/images/flower1.png'),
-  },
-]
 
-const products = [
-  {
-    id: "45f9d3a8-30fe-4334-9f92-b538f6c56a05",
-    name: 'Flower bouquet',
-    price: '500 bath',
-    image: require('../../assets/images/flower1.png'),
-  },
-  {
-    id: "cab4f646-a0fe-49b3-939c-a2adfc1ec590",
-    name: 'Flower bouquet',
-    price: '500 bath',
-    image: require('../../assets/images/flower1.png'),
-  },
-  {
-    id: "f13d3ac7-806c-4c5d-ad48-715336a329e7",
-    name: 'Flower bouquet',
-    price: '500 bath',
-    image: require('../../assets/images/flower1.png'),
-  },
-]
+
+
+
 const promote = [
   {
     id: '1',
@@ -102,9 +58,90 @@ const promote = [
 ];
 
 export default function App() {
+  const [flowers, setFlowers] = useState<Product[]>([])
   const flatListRef = useRef<FlatList>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoScroll, setIsAutoScroll] = useState(true);
+
+  const fetchFlowers = async () => {
+   
+    try {
+      const response = await axios.get(`${API_URL}/flower`)
+      const newFlowers = response.data.data
+
+      setFlowers(newFlowers)
+      
+    } catch (error) {
+      console.error("Error fetching flower data:", error)
+    } 
+  }
+
+  useEffect(() => {
+    fetchFlowers()
+  }, [])
+
+  const products = [
+    {
+      id: `${flowers[3]?.flower_id}`,
+      name:  `${flowers[3]?.name}`,
+      price:  `${flowers[3]?.price}`,
+      image:  `${flowers[3]?.image_url}`,
+    },
+    {
+      id: `${flowers[4]?.flower_id}`,
+      name:  `${flowers[4]?.name}`,
+      price:  `${flowers[4]?.price}`,
+      image:  `${flowers[4]?.image_url}`,
+    },
+    {
+      id: `${flowers[5]?.flower_id}`,
+      name:  `${flowers[5]?.name}`,
+      price:  `${flowers[5]?.price}`,
+      image:  `${flowers[5]?.image_url}`,
+    },
+  ]
+
+  const favorite = [
+    {
+      id: `${flowers[6]?.flower_id}`,
+      name:  `${flowers[6]?.name}`,
+      price:  `${flowers[6]?.price}`,
+      image:  `${flowers[6]?.image_url}`,
+    },
+    {
+      id: `${flowers[7]?.flower_id}`,
+      name:  `${flowers[7]?.name}`,
+      price:  `${flowers[7]?.price}`,
+      image:  `${flowers[7]?.image_url}`,
+    },
+    {
+      id: `${flowers[8]?.flower_id}`,
+      name:  `${flowers[8]?.name}`,
+      price:  `${flowers[8]?.price}`,
+      image:  `${flowers[8]?.image_url}`,
+    },
+  ]
+
+  const carts = [
+    {
+      id: `${flowers[0]?.flower_id}`,
+      name:  `${flowers[0]?.name}`,
+      price:  `${flowers[0]?.price}`,
+      image:  `${flowers[0]?.image_url}`,
+    },
+    {
+      id: `${flowers[1]?.flower_id}`,
+      name:  `${flowers[1]?.name}`,
+      price:  `${flowers[1]?.price}`,
+      image:  `${flowers[1]?.image_url}`,
+    },
+    {
+      id: `${flowers[2]?.flower_id}`,
+      name:  `${flowers[2]?.name}`,
+      price:  `${flowers[2]?.price}`,
+      image:  `${flowers[2]?.image_url}`,
+    },
+  ]
 
   useEffect(() => {
     if (!isAutoScroll) return;

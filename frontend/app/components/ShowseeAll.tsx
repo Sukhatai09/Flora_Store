@@ -15,10 +15,10 @@ const ShowseeAll = ({ name,haf }: ShowseeAllProps) => {
         route.push('/'+haf);
       }
   return (  
-    <View className='flex-row justify-between px-4 py-4'>
-      <Text className='font-bold text-xl'>{name}</Text>
+    <View className='flex-row justify-between px-4 pt-4'>
+      <Text className='font-bold text-xl mt-4'>{name}</Text>
       <Pressable onPress={handlePress}>
-        <Text className='font-bold text-xl'>See all</Text>
+        <Text className='font-bold text-xl mt-4'>See all</Text>
       </Pressable>
     </View>
   )
