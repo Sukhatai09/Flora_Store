@@ -138,7 +138,7 @@ export default function App() {
     {/* ScrollView ข้างล่าง */}
     <ScrollView
       className="w-full "
-      contentContainerStyle={{ paddingTop: 0 }} // สูงพอๆ กับ Topbar เพื่อไม่ให้ content ทับ Topbar
+      contentContainerStyle={{ paddingTop: 0 }} 
       showsVerticalScrollIndicator={true}
     >
   
