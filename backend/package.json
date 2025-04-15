@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon src/main.js",
-    "start:tunnel": "npx localtunnel --port 5000"
+    "start:tunnel": "npx localtunnel --port 5000 --subdomain flora"
+    
   },
   "keywords": [],
   "author": "",
