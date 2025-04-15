@@ -8,7 +8,6 @@ import flowerRoutes from "./routes/flowerRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import orderItemRoutes from "./routes/orderItemRoutes.js";
-import path from "path";
 
 dotenv.config();
 
@@ -23,7 +22,6 @@ app.use('/api',flowerRoutes);
 app.use('/api',orderRoutes);
 app.use('/api',userRoutes);
 app.use('/api',orderItemRoutes);
-app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 
 app.get("/", (req, res) => {
