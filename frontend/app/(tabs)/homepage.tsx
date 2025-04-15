@@ -20,19 +20,19 @@ const { width } = Dimensions.get('window');
 
 const carts = [
   {
-    id: 1,
+    id: "1",
     name: 'Flower bouquet',
     price: '500 bath',
     image: require('../../assets/images/flower1.png'),
   },
   {
-    id: 2,
+    id: "2",
     name: 'Flower bouquet',
     price: '500 bath',
     image: require('../../assets/images/flower1.png'),
   },
   {
-    id: 3,
+    id: "3",
     name: 'Flower bouquet',
     price: '500 bath',
     image: require('../../assets/images/flower1.png'),
@@ -41,19 +41,19 @@ const carts = [
 
 const favorite = [
   {
-    id: 1,
+    id: "1",
     name: 'Flower bouquet',
     price: '500 bath',
     image: require('../../assets/images/flower1.png'),
   },
   {
-    id: 2,
+    id: "2",
     name: 'Flower bouquet',
     price: '500 bath',
     image: require('../../assets/images/flower1.png'),
   },
   {
-    id: 3,
+    id: "3",
     name: 'Flower bouquet',
     price: '500 bath',
     image: require('../../assets/images/flower1.png'),
@@ -62,19 +62,19 @@ const favorite = [
 
 const products = [
   {
-    id: 1,
+    id: "45f9d3a8-30fe-4334-9f92-b538f6c56a05",
     name: 'Flower bouquet',
     price: '500 bath',
     image: require('../../assets/images/flower1.png'),
   },
   {
-    id: 2,
+    id: "cab4f646-a0fe-49b3-939c-a2adfc1ec590",
     name: 'Flower bouquet',
     price: '500 bath',
     image: require('../../assets/images/flower1.png'),
   },
   {
-    id: 3,
+    id: "f13d3ac7-806c-4c5d-ad48-715336a329e7",
     name: 'Flower bouquet',
     price: '500 bath',
     image: require('../../assets/images/flower1.png'),
@@ -152,6 +152,7 @@ export default function App() {
         showsHorizontalScrollIndicator={false}
         onMomentumScrollEnd={onScrollEnd}
         renderItem={({ item }) => (
+          
           <View
             style={{ width }}
             className="items-center pt-10 h-56 "

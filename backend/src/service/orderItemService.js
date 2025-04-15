@@ -8,3 +8,10 @@ export const createOrderItemService = async (orderItemData) => {
         data : orderItemData,
     });
 }
+export const deleteOrderItemService = async (id) => {
+    return await prisma.orderItem.delete({
+        where: {
+            order_item_id: id,
+        },
+    });
+}

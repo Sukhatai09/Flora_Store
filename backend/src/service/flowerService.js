@@ -6,6 +6,15 @@ export const createflowerService = async (flowerData) => {
     });
 }
 
+export const getflowerByIdService = async (id) => {
+    return await prisma.flower.findMany({
+        where: {
+            flower_id: id, // ID ของ flower ที่ต้องการค้นหา
+        },
+    });
+
+}
+
 export const updateflowerService = async (id, flowerData) => {
     return await prisma.flower.update({
         where: {flower_id:id},  // ID ของ flower ที่ต้องการอัพเดต 

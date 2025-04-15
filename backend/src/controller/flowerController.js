@@ -1,5 +1,5 @@
 import z from "zod";
-import { createflowerService, updateflowerService ,deleteFlowerService} from "../service/flowerService.js";
+import { createflowerService,getflowerByIdService, updateflowerService ,deleteFlowerService} from "../service/flowerService.js";
 import fs from "fs";
 
 const flowerSchema = z.object({
@@ -32,6 +32,27 @@ export const createFlower = async (req, res) => {
       data: newFlower,
     });
 
+  } catch (err) {
+    if (err instanceof z.ZodError) {
+      res.status(400).json({ message: err.errors });
+    } else {
+      console.error(err);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+}
+
+export const getFlowerById = async (req, res) => {
+  try {
+    const { id } = req.params; // ดึง id จาก params
+    const flower = await getflowerByIdService(id); // ค้นหาข้อมูลใน database
+    if (!flower) {
+      return res.status(404).json({ message: "Flower not found" });
+    }
+    res.status(200).json({
+      message: "Flower retrieved successfully",
+      data: flower,
+    });
   } catch (err) {
     if (err instanceof z.ZodError) {
       res.status(400).json({ message: err.errors });

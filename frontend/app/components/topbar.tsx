@@ -12,7 +12,7 @@ const Topbar = () => {
     <View className="w-full  bg-[#FEACA6] flex-row justify-end items-center pr-7 pt-10 ">
       <SafeAreaView>
         <View className="flex-row gap-5 mb-3">
-          <Link href="/favorit" className="flex items-center  justify-center">
+          <Link href="/(screen)/favorite" className="flex items-center  justify-center">
             <MaterialCommunityIcons
               name="cards-heart-outline"
               size={30}

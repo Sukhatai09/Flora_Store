@@ -10,52 +10,194 @@ const AllProduct = () => {
 
   const products = [
     {
-      id: 1,
+      id: "eeb98fcc-3a3d-4563-b356-744208332f3f",
       name: 'Flower bouquet',
       price: '500 bath',
       image: require('../../assets/images/flower1.png'),
     },
     {
-      id: 2,
+      id: "db16fc3a-845a-4121-b872-7bdc16bfb33c",
       name: 'Flower bouquet',
       price: '500 bath',
       image: require('../../assets/images/flower1.png'),
     },
     {
-      id: 3,
+      id: "c9768475-1307-492e-a674-7cdb7b5b6659",
       name: 'Flower bouquet',
       price: '500 bath',
       image: require('../../assets/images/flower1.png'),
     },
     {
-      id: 4,
+      id: "c3413f41-8a94-47ed-be59-8917ece5d068",
       name: 'Flower bouquet',
       price: '500 bath',
       image: require('../../assets/images/flower1.png'),
     },
     {
-      id: 5,
+      id: "b4b91513-7706-424b-a2ca-87e30f297c95",
       name: 'Flower bouquet',
       price: '500 bath',
       image: require('../../assets/images/flower1.png'),
     },
     {
-      id: 6,
+      id: "afbb89ff-83c5-4f71-9d04-924b53398cb8",
       name: 'Flower bouquet',
       price: '500 bath',
       image: require('../../assets/images/flower1.png'),
     },
+    {
+      id: "ab2b57f0-36c5-4c22-95de-05eb23672182",
+      name: 'Flower bouquet',
+      price: '500 bath',
+      image: require('../../assets/images/flower1.png'),
+    },
+    {
+      id: "a26f61a8-a8c7-454d-8181-da263ed0f603",
+      name: 'Flower bouquet',
+      price: '500 bath',
+      image: require('../../assets/images/flower1.png'),
+    },
+    {
+      id: "a1bc76d0-ec74-420e-9b57-fcc08bc50063",
+      name: 'Flower bouquet',
+      price: '500 bath',
+      image: require('../../assets/images/flower1.png'),
+    },
+    {
+      id: "913a865f-d984-4f60-b35d-fffeba6d8213",
+      name: 'Flower bouquet',
+      price: '500 bath',
+      image: require('../../assets/images/flower1.png'),
+    },
+    {
+      id: "8e45ac82-91d9-4bec-8767-08ef9a430e46",
+      name: 'Flower bouquet',
+      price: '500 bath',
+      image: require('../../assets/images/flower1.png'),
+    },
+    {
+      id: "87cdbcc6-57b1-44ee-9cb9-f9fcef8341d3",
+      name: 'Flower bouquet',
+      price: '500 bath',
+      image: require('../../assets/images/flower1.png'),
+    },
+    {
+      id: "80e23833-bd62-4440-af74-d8753e0e9e09",
+      name: 'Flower bouquet',
+      price: '500 bath',
+      image: require('../../assets/images/flower1.png'),
+    },
+
+    {
+      id: "7c58b534-40d3-49a0-9b07-fce1fb85e0a0",
+      name: 'Flower bouquet',
+      price: '500 bath',
+      image: require('../../assets/images/flower1.png'),
+    },
+
+    {
+      id: "77ea2440-51f4-4375-8860-839a9ebb85e7",
+      name: 'Flower bouquet',
+      price: '500 bath',
+      image: require('../../assets/images/flower1.png'),
+    },
+
+    {
+      id: "724b3ef5-173b-4c55-9120-dbcac767b572",
+      name: 'Flower bouquet',
+      price: '500 bath',
+      image: require('../../assets/images/flower1.png'),
+    },
+
+    {
+      id: "61fdf3c6-f5df-4612-b5d3-1a54d6727659",
+      name: 'Flower bouquet',
+      price: '500 bath',
+      image: require('../../assets/images/flower1.png'),
+    },
+
+    {
+      id: "59a6c096-444c-4c9e-97b3-543b3718287d",
+      name: 'Flower bouquet',
+      price: '500 bath',
+      image: require('../../assets/images/flower1.png'),
+    },
+
+    {
+      id: "50ec7654-58ed-48d8-8be9-fd46c759a9e1",
+      name: 'Flower bouquet',
+      price: '500 bath',
+      image: require('../../assets/images/flower1.png'),
+    },
+
+    {
+      id: "4d8650bd-36fb-49ca-8bb2-df3f5c361d9b",
+      name: 'Flower bouquet',
+      price: '500 bath',
+      image: require('../../assets/images/flower1.png'),
+    },
+
+    {
+      id: "42188e47-f804-40d5-b1a9-bd6570d6f779",
+      name: 'Flower bouquet',
+      price: '500 bath',
+      image: require('../../assets/images/flower1.png'),
+    },
+
+    {
+      id: "35ce8be1-dcaf-476a-af38-a4c9d2a742bb",
+      name: 'Flower bouquet',
+      price: '500 bath',
+      image: require('../../assets/images/flower1.png'),
+    },
+
+    {
+      id: "3537e047-658a-418e-a48b-51f4dd467af1",
+      name: 'Flower bouquet',
+      price: '500 bath',
+      image: require('../../assets/images/flower1.png'),
+    },
+
+    {
+      id: "1a36bbad-7f1e-4cc9-937a-bb0f297b52f2",
+      name: 'Flower bouquet',
+      price: '500 bath',
+      image: require('../../assets/images/flower1.png'),
+    },
+
+    {
+      id: "16e07b82-d8ac-4873-9e96-a62af91ce73b",
+      name: 'Flower bouquet',
+      price: '500 bath',
+      image: require('../../assets/images/flower1.png'),
+    },
+
+    {
+      id: "12b6fbc2-303f-4b8c-b16f-cee833ba84a4",
+      name: 'Flower bouquet',
+      price: '500 bath',
+      image: require('../../assets/images/flower1.png'),
+    },
+
+    {
+      id: "0691eaf1-a63b-454c-97e5-5b51b920fee0",
+      name: 'Flower bouquet',
+      price: '500 bath',
+      image: require('../../assets/images/flower1.png'),
+    },
+
+    
   ]
   const router = useRouter()
   const [likedItems, setLikedItems] = useState<number[]>([])
 
 
 
-  const handleLikePress = (id: number) => {
-    setLikedItems((prev) => 
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    )
-  }
+  // const handleLikePress = (id: string) => {
+  //   setLikedItems((prev) => 
+  //     prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+  //   )
+  // }
 
   return (
     
@@ -72,6 +214,9 @@ const AllProduct = () => {
         <View className="flex-row flex-wrap gap-4 mt-4 px-2">
           {products.map((item, index) => (
             <TouchableOpacity
+
+            // @ts-ignore
+              onPress={() => router.push(`/(screen)/${item.id}`)}
               key={index}
               className="bg-[#DDCDF7] items-center w-[120px] h-[150px] py-4 relative"
 
@@ -82,7 +227,7 @@ const AllProduct = () => {
                 <Text className="text-sm">{item.price}</Text>
               </View>
               <TouchableOpacity
-                onPress={() => handleLikePress(item.id)}
+                // onPress={() => handleLikePress(item.id)}
                 style={{ position: 'absolute', top: 4, right: 2 }}
               >
                 <MaterialCommunityIcons
