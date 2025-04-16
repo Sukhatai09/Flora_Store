@@ -1,4 +1,13 @@
-import { View, Text, Image, TouchableOpacity, ScrollView, NativeScrollEvent, NativeSyntheticEvent } from 'react-native'
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  RefreshControl,
+} from 'react-native'
 import React, { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'expo-router'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
@@ -24,25 +33,27 @@ const AllProduct = () => {
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
   const [loading, setLoading] = useState(false)
+  const [refreshing, setRefreshing] = useState(false)
+
   const customer = useAuthStore((state) => state.customer)
   const limit = 10
   const router = useRouter()
-
   const isFetching = useRef(false)
 
-  const fetchFlowers = async () => {
-    if (isFetching.current || !hasMore) return
+  const fetchFlowers = async (reset = false) => {
+    if (isFetching.current || (!hasMore && !reset)) return
     setLoading(true)
     isFetching.current = true
     try {
-      const response = await axios.get(`${API_URL}/flower?page=${page}&limit=${limit}`)
+      const currentPage = reset ? 1 : page
+      const response = await axios.get(`${API_URL}/flower?page=${currentPage}&limit=${limit}`)
       const newFlowers = response.data.data
 
-      setFlowers((prev) => [...prev, ...newFlowers])
+      setFlowers((prev) => reset ? newFlowers : [...prev, ...newFlowers])
       if (newFlowers.length < limit) {
         setHasMore(false)
       } else {
-        setPage((prev) => prev + 1)
+        setPage(currentPage + 1)
       }
     } catch (error) {
       console.error("Error fetching flower data:", error)
@@ -52,29 +63,60 @@ const AllProduct = () => {
     }
   }
 
+  const fetchLikedFlowers = async () => {
+    try {
+      if (!customer?.customer_id) return
+      const res = await axios.get(`${API_URL}/flowerLikes/${customer.customer_id}`)
+      const liked = res.data.flowerLikes.map((like: any) => like.flower_id)
+      setLikedItems(liked)
+    } catch (error) {
+      console.error("Error fetching liked flowers:", error)
+    }
+  }
+
+  const onRefresh = async () => {
+    setRefreshing(true)
+    setPage(1)
+    setHasMore(true)
+    await fetchFlowers(true)  // โหลดใหม่ทั้งหมด
+    await fetchLikedFlowers()
+    setRefreshing(false)
+  }
+
   useEffect(() => {
     fetchFlowers()
+    fetchLikedFlowers()
   }, [])
 
   const handleLikePress = async (flowerId: string) => {
     const alreadyLiked = likedItems.includes(flowerId)
+    const customerId = customer?.customer_id
 
     setLikedItems((prev) =>
       alreadyLiked ? prev.filter((item) => item !== flowerId) : [...prev, flowerId]
     )
 
     try {
-      if (!alreadyLiked && customer?.customer_id) {
+      if (!customerId) {
+        console.warn("No customer_id found!")
+        return
+      }
+
+      if (alreadyLiked) {
+        await axios.delete(`${API_URL}/flowerLikes`, {
+          data: {
+            customer_id: customerId,
+            flower_id: flowerId,
+          }
+        })
+      } else {
         await axios.post(`${API_URL}/flowerLikes`, {
-          customer_id: customer.customer_id,
+          customer_id: customerId,
           flower_id: flowerId,
         })
-        console.log(`Liked flower ${flowerId} by customer ${customer.customer_id}`)
-      } else if (!customer?.customer_id) {
-        console.warn("No customer_id found in store!")
       }
     } catch (error) {
-      console.error("Error liking flower:", error)
+      console.error("Error toggling like:", error)
     }
   }
 
@@ -98,6 +140,12 @@ const AllProduct = () => {
         onScroll={handleScroll}
         scrollEventThrottle={400}
         showsVerticalScrollIndicator={false}
+        refreshControl={ // 👉 ดึงลงรีเฟรช
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
       >
         <View className="w-full flex-row items-center justify-center">
           <Text className="font-bold text-3xl mt-4">Flower Bouquet</Text>
@@ -106,6 +154,7 @@ const AllProduct = () => {
         <View className="flex-row flex-wrap gap-4 mt-4 px-2 justify-center">
           {flowers.map((item) => {
             const imageUri = `${API_URL?.replace(/\/api$/, "").replace(/\/$/, "")}/${item?.image_url?.replace(/^(\.\/)/, '').replace(/\\/g, '/')}`
+            const isLiked = likedItems.includes(item.flower_id)
 
             return (
               <TouchableOpacity
@@ -128,9 +177,9 @@ const AllProduct = () => {
                   style={{ position: 'absolute', top: 4, right: 2 }}
                 >
                   <MaterialCommunityIcons
-                    name={likedItems.includes(item.flower_id) ? "cards-heart" : "cards-heart-outline"}
+                    name={isLiked ? "cards-heart" : "cards-heart-outline"}
                     size={25}
-                    color={likedItems.includes(item.flower_id) ? "red" : "black"}
+                    color={isLiked ? "red" : "black"}
                   />
                 </TouchableOpacity>
               </TouchableOpacity>

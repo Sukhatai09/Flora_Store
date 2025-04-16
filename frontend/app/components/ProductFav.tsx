@@ -14,7 +14,7 @@ interface Product {
 
 const ProductFav = ({ products }: { products: Product[] }) => {
   return (
-    <View className="flex-row flex-wrap gap-4 mt-4 px-2">
+    <View className="flex-row flex-wrap gap-6 mt-4 py-4 mx-auto">
       {products.map((item, index) => {
         let imageUri;
 
@@ -27,7 +27,7 @@ const ProductFav = ({ products }: { products: Product[] }) => {
         return (
           <TouchableOpacity
             key={index}
-            className="bg-[#DDCDF7] items-center w-[115px] h-[150px] py-4 relative"
+            className="bg-[#DDCDF7] items-center w-[115px] h-[150px] pt-4 relative"
           >
             {imageUri ? (
               <Image source={{ uri: imageUri }} className="w-24 h-[65%] object-cover" />

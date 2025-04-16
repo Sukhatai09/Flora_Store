@@ -73,8 +73,8 @@ const EditProfile = () => {
         "Content-Type": "multipart/form-data",
       },
     });
-
-    // await refresh(`${customer?.customer_id}`); // เรียกใช้ refresh หลังจากอัพเดตข้อมูลเสร็จ
+    
+    // await refresh(); // เรียกใช้ refresh หลังจากอัพเดตข้อมูลเสร็จ
     alert(
       "name : " + name +
       "\nemail: " + email +

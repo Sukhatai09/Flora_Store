@@ -22,7 +22,7 @@ interface AuthStore {
     login: (email: string, password: string) => Promise<void>;
     logout: () => Promise<void>;
     checkLoginStatus: () => Promise<void>;
-    refresh: (id:string) => Promise<void>;
+    refresh: () => Promise<void>;
 
 }
 
@@ -48,21 +48,23 @@ export const useAuthStore = create<AuthStore>((set) => ({
         await AsyncStorage.removeItem('customer');
         set({ token: null, customer: null, isLoggedIn: false });
     },
-    refresh: async (id) => {
-        try{
-            const oldUser = await AsyncStorage.getItem('customer');
+    refresh: async () => {
+        try {
+            const storedUser = await AsyncStorage.getItem('customer');
+            // if (storedUser) {
+            //   const parsedUser = JSON.parse(storedUser);
+            //   const response = await axios.get(`${API_URL}/user/${parsedUser.id}`);
+            //   set({customer: response.data });
+            // }
             
-            if (oldUser) {
-                const user = JSON.parse(oldUser);
-                const res = await axios.get(`${API_URL}/user/${id}` )
-                
-                await AsyncStorage.setItem('customer', JSON.stringify(res.data)); // เพิ่มตรงนี้
-                set({ customer: res.data });
-            }
-        }catch(error) {
-            console.error('Refresh error:', error);
-        }
-    },
+            const parsedUser = JSON.parse(storedUser || '{}');
+            console.log("Stored user:", parsedUser.customer_id);
+            const response = await axios.get(`${API_URL}/user/${parsedUser.customer_id}`);
+            set({ customer: response.data, isLoggedIn: true });
+          } catch (error) {
+            console.error("Error refreshing user:", error);
+          }
+      },
     checkLoginStatus: async () => {
         try {
             const token = await AsyncStorage.getItem('token');

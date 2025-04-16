@@ -7,6 +7,7 @@ import {useAuthStore} from "../../store/flora_store";
 import Contants from 'expo-constants';
 
 
+
 const API_URL = Contants.expoConfig?.extra?.API_URL ;
 
 
@@ -17,6 +18,7 @@ const user = () => {
   const customer = useAuthStore((state) => state.customer);
   const imageUri = `${API_URL?.replace(/\/api$/, "").replace(/\/$/, "")}/${customer?.image_url?.replace(/^(\.\/)/, '').replace(/\\/g, '/')}`;
   const refresh = useAuthStore((state) => state.refresh);
+  
 
   // useEffect(() => {
   //   const fetchCustomerData = async () => {
