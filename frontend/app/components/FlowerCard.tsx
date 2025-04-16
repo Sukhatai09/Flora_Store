@@ -1,21 +1,14 @@
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image } from 'react-native';
 
 export default function FlowerCard({ flower }: any) {
   return (
-    <View style={styles.card}>
-      <Image source={{ uri: flower.image }} style={styles.image} />
-      <Text style={styles.name}>{flower.name}</Text>
-      <Text style={styles.price}>{flower.price} บาท</Text>
+    <View className="mb-4 p-4 border rounded-lg">
+      <Image
+        source={{ uri: flower.image }}
+        className="w-full h-[150px] rounded-lg"
+      />
+      <Text className="text-lg font-bold mt-2">{flower.name}</Text>
+      <Text className="text-base text-gray-500">{flower.price} บาท</Text>
     </View>
   );
 }
-
-
-
-const styles = StyleSheet.create({
-    card: { marginBottom: 16, padding: 16, borderWidth: 1, borderRadius: 8 },
-    image: { width: '100%', height: 150, borderRadius: 8 },
-    name: { fontSize: 18, fontWeight: 'bold', marginTop: 8 },
-    price: { fontSize: 16, color: 'gray' },
-  });
-  

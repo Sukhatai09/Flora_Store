@@ -9,7 +9,7 @@ interface Product {
   id: string;
   name: string;
   price: string;
-  image: any; // Using 'any' for the require statement, but you might want to be more specific
+  image: any; 
 }
 
 const ProductFav = ({ products }: { products: Product[] }) => {
@@ -40,7 +40,7 @@ const ProductFav = ({ products }: { products: Product[] }) => {
               <Text className="text-sm">{item.price}</Text>
             </View>
 
-            <TouchableOpacity style={{ position: 'absolute', top: 4, right: 2 }}>
+            <TouchableOpacity className='absolute top-4 right-2'>
               <MaterialCommunityIcons
                 name="cards-heart"
                 size={25}
