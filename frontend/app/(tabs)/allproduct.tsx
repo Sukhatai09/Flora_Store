@@ -5,6 +5,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 import Topbar from '../components/topbar'
 import axios from 'axios'
 import Constants from 'expo-constants'
+import { useAuthStore } from '@/store/flora_store'
 
 const API_URL = Constants.expoConfig?.extra?.API_URL
 
@@ -23,6 +24,7 @@ const AllProduct = () => {
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
   const [loading, setLoading] = useState(false)
+  const customer = useAuthStore((state) => state.customer)
   const limit = 10
   const router = useRouter()
 
@@ -54,15 +56,30 @@ const AllProduct = () => {
     fetchFlowers()
   }, [])
 
-  const handleLikePress = (id: string) => {
+  const handleLikePress = async (flowerId: string) => {
+    const alreadyLiked = likedItems.includes(flowerId)
+
     setLikedItems((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+      alreadyLiked ? prev.filter((item) => item !== flowerId) : [...prev, flowerId]
     )
+
+    try {
+      if (!alreadyLiked && customer?.customer_id) {
+        await axios.post(`${API_URL}/flowerLikes`, {
+          customer_id: customer.customer_id,
+          flower_id: flowerId,
+        })
+        console.log(`Liked flower ${flowerId} by customer ${customer.customer_id}`)
+      } else if (!customer?.customer_id) {
+        console.warn("No customer_id found in store!")
+      }
+    } catch (error) {
+      console.error("Error liking flower:", error)
+    }
   }
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent
-
     const paddingToBottom = 50
     const isCloseToBottom =
       layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom
@@ -88,8 +105,7 @@ const AllProduct = () => {
 
         <View className="flex-row flex-wrap gap-4 mt-4 px-2 justify-center">
           {flowers.map((item) => {
-            const imageUri = `${API_URL?.replace(/\/api$/, "").replace(/\/$/, "")}/${item?.image_url?.replace(/^(\.\/)/, '').replace(/\\/g, '/')}`;
-
+            const imageUri = `${API_URL?.replace(/\/api$/, "").replace(/\/$/, "")}/${item?.image_url?.replace(/^(\.\/)/, '').replace(/\\/g, '/')}`
 
             return (
               <TouchableOpacity

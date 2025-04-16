@@ -1,248 +1,151 @@
 import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'expo-router'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import Topbar from '../components/topbar'
 import { AntDesign } from '@expo/vector-icons'
+import axios from 'axios'
+import Constants from 'expo-constants'
+import { useAuthStore } from '@/store/flora_store'
 
+const API_URL = Constants.expoConfig?.extra?.API_URL
+
+interface Product {
+  flower_id: string
+  name: string
+  description: string
+  price: number
+  image_url: string
+  stock_quantity: number
+}
 
 const FavoritsScreen = () => {
-const route = useRouter()
-  const products = [
-    {
-      id: "eeb98fcc-3a3d-4563-b356-744208332f3f",
-      name: 'Flower bouquet',
-      price: '500 bath',
-      image: require('../../assets/images/flower1.png'),
-    },
-    {
-      id: "db16fc3a-845a-4121-b872-7bdc16bfb33c",
-      name: 'Flower bouquet',
-      price: '500 bath',
-      image: require('../../assets/images/flower1.png'),
-    },
-    {
-      id: "c9768475-1307-492e-a674-7cdb7b5b6659",
-      name: 'Flower bouquet',
-      price: '500 bath',
-      image: require('../../assets/images/flower1.png'),
-    },
-    {
-      id: "c3413f41-8a94-47ed-be59-8917ece5d068",
-      name: 'Flower bouquet',
-      price: '500 bath',
-      image: require('../../assets/images/flower1.png'),
-    },
-    {
-      id: "b4b91513-7706-424b-a2ca-87e30f297c95",
-      name: 'Flower bouquet',
-      price: '500 bath',
-      image: require('../../assets/images/flower1.png'),
-    },
-    {
-      id: "afbb89ff-83c5-4f71-9d04-924b53398cb8",
-      name: 'Flower bouquet',
-      price: '500 bath',
-      image: require('../../assets/images/flower1.png'),
-    },
-    {
-      id: "ab2b57f0-36c5-4c22-95de-05eb23672182",
-      name: 'Flower bouquet',
-      price: '500 bath',
-      image: require('../../assets/images/flower1.png'),
-    },
-    {
-      id: "a26f61a8-a8c7-454d-8181-da263ed0f603",
-      name: 'Flower bouquet',
-      price: '500 bath',
-      image: require('../../assets/images/flower1.png'),
-    },
-    {
-      id: "a1bc76d0-ec74-420e-9b57-fcc08bc50063",
-      name: 'Flower bouquet',
-      price: '500 bath',
-      image: require('../../assets/images/flower1.png'),
-    },
-    {
-      id: "913a865f-d984-4f60-b35d-fffeba6d8213",
-      name: 'Flower bouquet',
-      price: '500 bath',
-      image: require('../../assets/images/flower1.png'),
-    },
-    {
-      id: "8e45ac82-91d9-4bec-8767-08ef9a430e46",
-      name: 'Flower bouquet',
-      price: '500 bath',
-      image: require('../../assets/images/flower1.png'),
-    },
-    {
-      id: "87cdbcc6-57b1-44ee-9cb9-f9fcef8341d3",
-      name: 'Flower bouquet',
-      price: '500 bath',
-      image: require('../../assets/images/flower1.png'),
-    },
-    {
-      id: "80e23833-bd62-4440-af74-d8753e0e9e09",
-      name: 'Flower bouquet',
-      price: '500 bath',
-      image: require('../../assets/images/flower1.png'),
-    },
+  const route = useRouter()
+  const [products, setProducts] = useState<Product[]>([])
+  const [likedItems, setLikedItems] = useState<string[]>([])
+  const customer = useAuthStore((state) => state.customer)
+  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState<boolean>(false)
 
-    {
-      id: "7c58b534-40d3-49a0-9b07-fce1fb85e0a0",
-      name: 'Flower bouquet',
-      price: '500 bath',
-      image: require('../../assets/images/flower1.png'),
-    },
+  const fetchFlowers = async () => {
+    setLoading(true)
+    try {
+      const response = await axios.get(`${API_URL}/flowerLikes/${customer?.customer_id}`)
+      const flowerLikes = response.data.flowerLikes
 
-    {
-      id: "77ea2440-51f4-4375-8860-839a9ebb85e7",
-      name: 'Flower bouquet',
-      price: '500 bath',
-      image: require('../../assets/images/flower1.png'),
-    },
+      if (!flowerLikes || flowerLikes.length === 0) {
+        setError("You have no liked flowers")
+        setProducts([])
+        setLikedItems([])
+        return
+      }
 
-    {
-      id: "724b3ef5-173b-4c55-9120-dbcac767b572",
-      name: 'Flower bouquet',
-      price: '500 bath',
-      image: require('../../assets/images/flower1.png'),
-    },
+      const flowerDetailPromises = flowerLikes.map(async (like: any) => {
+        const flowerRes = await axios.get(`${API_URL}/flower/${like.flower_id}`)
+        if (flowerRes.status !== 200) throw new Error('Failed to fetch flower details')
+        return flowerRes.data.data[0]
+      })
 
-    {
-      id: "61fdf3c6-f5df-4612-b5d3-1a54d6727659",
-      name: 'Flower bouquet',
-      price: '500 bath',
-      image: require('../../assets/images/flower1.png'),
-    },
+      const flowerDetails = await Promise.all(flowerDetailPromises)
+      setProducts(flowerDetails)
+      setLikedItems(flowerLikes.map((like: any) => like.flower_id))
+      setError(null)
+    } catch (error) {
+      console.error("Error fetching flower data:", error)
+      setError("An error occurred while fetching flower data.")
+    } finally {
+      setLoading(false)
+    }
+  }
 
-    {
-      id: "59a6c096-444c-4c9e-97b3-543b3718287d",
-      name: 'Flower bouquet',
-      price: '500 bath',
-      image: require('../../assets/images/flower1.png'),
-    },
+  const deleteFlowerLike = async (flower_id: string) => {
+    try {
+      const response = await axios.delete(`${API_URL}/flowerLikes`, {
+        data: {
+          customer_id: customer?.customer_id,
+          flower_id: flower_id
+        }
+      })
+      if (response.status === 200) {
+        // ลบออกจาก state โดยไม่ต้อง fetch ใหม่
+        setLikedItems((prevLikes) => prevLikes.filter((id) => id !== flower_id))
+        setProducts((prevProducts) => prevProducts.filter((product) => product.flower_id !== flower_id))
+      } else {
+        console.error("Failed to remove flower like")
+      }
+    } catch (error) {
+      console.error("Error removing flower like:", error)
+    }
+  }
 
-    {
-      id: "50ec7654-58ed-48d8-8be9-fd46c759a9e1",
-      name: 'Flower bouquet',
-      price: '500 bath',
-      image: require('../../assets/images/flower1.png'),
-    },
-
-    {
-      id: "4d8650bd-36fb-49ca-8bb2-df3f5c361d9b",
-      name: 'Flower bouquet',
-      price: '500 bath',
-      image: require('../../assets/images/flower1.png'),
-    },
-
-    {
-      id: "42188e47-f804-40d5-b1a9-bd6570d6f779",
-      name: 'Flower bouquet',
-      price: '500 bath',
-      image: require('../../assets/images/flower1.png'),
-    },
-
-    {
-      id: "35ce8be1-dcaf-476a-af38-a4c9d2a742bb",
-      name: 'Flower bouquet',
-      price: '500 bath',
-      image: require('../../assets/images/flower1.png'),
-    },
-
-    {
-      id: "3537e047-658a-418e-a48b-51f4dd467af1",
-      name: 'Flower bouquet',
-      price: '500 bath',
-      image: require('../../assets/images/flower1.png'),
-    },
-
-    {
-      id: "1a36bbad-7f1e-4cc9-937a-bb0f297b52f2",
-      name: 'Flower bouquet',
-      price: '500 bath',
-      image: require('../../assets/images/flower1.png'),
-    },
-
-    {
-      id: "16e07b82-d8ac-4873-9e96-a62af91ce73b",
-      name: 'Flower bouquet',
-      price: '500 bath',
-      image: require('../../assets/images/flower1.png'),
-    },
-
-    {
-      id: "12b6fbc2-303f-4b8c-b16f-cee833ba84a4",
-      name: 'Flower bouquet',
-      price: '500 bath',
-      image: require('../../assets/images/flower1.png'),
-    },
-
-    {
-      id: "0691eaf1-a63b-454c-97e5-5b51b920fee0",
-      name: 'Flower bouquet',
-      price: '500 bath',
-      image: require('../../assets/images/flower1.png'),
-    },
-
-    
-  ]
-  const router = useRouter()
-  const [likedItems, setLikedItems] = useState<number[]>([])
-
-
-
-  // const handleLikePress = (id: string) => {
-  //   setLikedItems((prev) => 
-  //     prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-  //   )
-  // }
+  useEffect(() => {
+    fetchFlowers()
+  }, [])
 
   return (
-    
     <View className="flex-col items-center justify-center relative">
-
       <Topbar />
-      <View className="absolute top-0 left-0 w-full  bg-[#FEACA6]" >
+      <View className="absolute top-0 left-0 w-full bg-[#FEACA6]">
         <TouchableOpacity className="flex-1 items-start justify-center ml-5 mt-10" onPress={() => route.back()}>
-          <Text >
+          <Text>
             <AntDesign name="arrowleft" size={40} color="black" />
           </Text>
         </TouchableOpacity>
       </View>
-      
+
       <ScrollView
         className="w-full"
         contentContainerStyle={{ paddingTop: 0 }}
         showsVerticalScrollIndicator={true}
       >
-        <View className='w-full flex-row items-center justify-center'>
-          <Text className="font-bold text-3xl text">Favorites</Text>
+        <View className='w-full flex-row items-center justify-center my-5'>
+          <Text className="font-bold text-3xl">Favorits</Text>
         </View>
-        <View className="flex-row flex-wrap gap-4 mt-4 px-2">
+
+        {error && (
+          <View className="flex-row items-center justify-center mt-4">
+            <Text className="text-red-500">{error}</Text>
+          </View>
+        )}
+
+        {loading && (
+          <View className="flex-row items-center justify-center mt-4">
+            <Text className="text-blue-500">Loading...</Text>
+          </View>
+        )}
+
+        {products.length === 0 && !loading && !error && (
+          <View className="flex-row items-center justify-center mt-4">
+            <Text className="text-gray-500">You have no liked flowers yet!</Text>
+          </View>
+        )}
+
+        <View className="flex-row flex-wrap gap-4 mt-4 px-2 pb-10">
           {products.map((item, index) => (
             <TouchableOpacity
-
-            // @ts-ignore
-              onPress={() => router.push(`/(screen)/${item.id}`)}
+              onPress={() => route.push(`/(screen)/${item.flower_id}`)}
               key={index}
               className="bg-[#DDCDF7] items-center w-[120px] h-[150px] py-4 relative"
-
             >
-              <Image source={item.image} className="w-24 h-[65%] object-cover" />
+              <Image
+                source={{
+                  uri: `${API_URL?.replace(/\/api$/, "").replace(/\/$/, "")}/${item?.image_url?.replace(/^(\.\/)/, '').replace(/\\/g, '/')}`
+                }}
+                className="w-24 h-[65%] object-cover"
+              />
               <View className="items-center justify-center bg-[#F8DAE2] w-full h-[35%] mt-4">
-                <Text className="font-bold text-sm">{item.name}</Text>
-                <Text className="text-sm">{item.price}</Text>
+                <Text className="font-bold text-sm" numberOfLines={1}>{item.name}</Text>
+                <Text className="text-sm">{item.price} บาท</Text>
               </View>
+
               <TouchableOpacity
-                // onPress={() => handleLikePress(item.id)}
                 style={{ position: 'absolute', top: 4, right: 2 }}
+                onPress={() => deleteFlowerLike(item.flower_id)}
               >
                 <MaterialCommunityIcons
-                  name={likedItems.includes(item.id) ? "cards-heart" : "cards-heart-outline"}
+                  name={likedItems.includes(item.flower_id) ? "cards-heart" : "cards-heart-outline"}
                   size={25}
-                  color={likedItems.includes(item.id) ? "red" : "black"}
+                  color={likedItems.includes(item.flower_id) ? "red" : "black"}
                 />
               </TouchableOpacity>
             </TouchableOpacity>
