@@ -27,7 +27,7 @@ const ProductFav = ({ products }: { products: Product[] }) => {
         return (
           <TouchableOpacity
             key={index}
-            className="bg-[#DDCDF7] items-center w-[120px] h-[150px] py-4 relative"
+            className="bg-[#DDCDF7] items-center w-[115px] h-[150px] py-4 relative"
           >
             {imageUri ? (
               <Image source={{ uri: imageUri }} className="w-24 h-[65%] object-cover" />

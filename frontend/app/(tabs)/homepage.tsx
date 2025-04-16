@@ -40,19 +40,19 @@ const promote = [
   {
     id: '1',
     text: 'SPECIAL OFFER! Buy 1 bouquet get 1 50% off!',
-    image: require('../../assets/images/flower1.png'),
+    image: require('../../assets/images/flower2.png'),
     bgColor: '#ABE0F7', 
   },
   {
     id: '2',
     text: 'NEW ARRIVAL! Spring Collection 2025!',
-    image: require('../../assets/images/flower1.png'),
+    image: require('../../assets/images/flower3.png'),
     bgColor: '#DCB1F6', 
   },
   {
     id: '3',
     text: 'LIMITED TIME! 20% OFF on all roses!',
-    image: require('../../assets/images/flower1.png'),
+    image: require('../../assets/images/flower4.png'),
     bgColor: '#B1F6BE', 
   },
 ];
