@@ -1,19 +1,99 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import Topbar from '../components/topbar';
 import CartItem from '../components/CartItem';
+import axios from 'axios';
+import Constants from 'expo-constants';
+
+const API_URL = Constants.expoConfig?.extra?.API_URL;
+
+interface CartEntry {
+  cart_item_id: number; // ใช้ cart_item_id เป็น ID ของสินค้าในตะกร้า
+  flower_id: string;
+  quantity: number;
+}
+
+interface FlowerDetail {
+  flower_id: string;
+  name: string;
+  price: number;
+  image_url: string;
+}
 
 const FlowersScreen: React.FC = () => {
   const router = useRouter();
-  const [quantity, setQuantity] = useState<number>(1);
+  const [cartItems, setCartItems] = useState<CartEntry[]>([]);
+  const [flowerDetails, setFlowerDetails] = useState<Record<string, FlowerDetail>>({});
 
-  const handlePress = () => {
-    router.push('/(screen)/pay');
+  // ฟังก์ชันดึงข้อมูลตะกร้าสินค้า
+  const fetchCartItems = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/cartItems`);
+      const items: CartEntry[] = res.data;
+      setCartItems(items);
+
+      const detailPromises = items.map(item =>
+        axios.get(`${API_URL}/flower/${item.flower_id}`)
+      );
+      const detailsResponses = await Promise.all(detailPromises);
+
+      const detailMap: Record<string, FlowerDetail> = {};
+      detailsResponses.forEach(res => {
+        const flower = res.data?.data?.[0] || res.data;
+        if (flower && flower.flower_id) {
+          detailMap[flower.flower_id] = flower;
+        }
+      });
+      setFlowerDetails(detailMap);
+    } catch (error) {
+      console.error('Error fetching cart or flower details:', error);
+    }
   };
 
-  const handleDelete = () => {
+  useEffect(() => {
+    fetchCartItems();
+  }, []);
+
+  // ฟังก์ชันเปลี่ยนแปลงจำนวนสินค้าที่อยู่ในตะกร้า
+  const handleQuantityChange = async (cartItemId: number, newQuantity: number) => {
+    if (newQuantity < 1) {
+      alert("จำนวนสินค้าไม่สามารถต่ำกว่า 1");
+      return;
+    }
+
+    // อัปเดต state ให้ทันทีในฝั่งหน้า UI
+    const updatedCartItems = cartItems.map(item =>
+      item.cart_item_id === cartItemId ? { ...item, quantity: newQuantity } : item
+    );
+    setCartItems(updatedCartItems);
+
+    // ส่งข้อมูลไปยัง API เพื่ออัปเดตข้อมูลสินค้า
+    try {
+      await axios.put(`${API_URL}/cartItems`, {
+        id: cartItemId, // ใช้ cart_item_id ที่ต้องการอัปเดต
+        quantity: newQuantity // จำนวนที่อัปเดต
+      });
+    } catch (error) {
+      console.error('Error updating cart item quantity:', error);
+      alert('ไม่สามารถปรับปรุงจำนวนสินค้าได้');
+    }
+  };
+
+  // ฟังก์ชันลบสินค้าออกจากตะกร้า
+  const handleDelete = async (cartItemId: number) => {
     alert("ลบสินค้าออกจากตะกร้าแล้ว");
+    setCartItems(prev => prev.filter(item => item.cart_item_id !== cartItemId));
+    setFlowerDetails(prev => {
+      const updated = { ...prev };
+      delete updated[cartItemId];
+      return updated;
+    });
+  };
+
+  // ฟังก์ชันไปยังหน้าชำระเงิน
+  const handlePress = () => {
+    router.push('/(screen)/pay');
   };
 
   return (
@@ -21,18 +101,30 @@ const FlowersScreen: React.FC = () => {
       <Topbar />
       <Text className="text-[35px] mb-4 px-4 mt-10">Shopping Cart</Text>
 
-      <CartItem
-        title="Rose bouquet"
-        price={3000}
-        imageSource={require('../../assets/images/flower1.png')}
-        quantity={quantity}
-        setQuantity={setQuantity}
-        onDelete={handleDelete}
-      />
+      <ScrollView className="px-4 pb-10">
+        {cartItems.map((item) => {
+          const flower = flowerDetails[item.flower_id];
+          if (!flower) return null;
+
+          const imageUri = `${API_URL?.replace(/\/api$/, "").replace(/\/$/, "")}/${flower.image_url?.replace(/^(\.\/)/, '').replace(/\\/g, '/')}`;
+
+          return (
+            <CartItem
+              key={item.cart_item_id} // ใช้ cart_item_id ในการทำ key
+              title={flower.name}
+              price={flower.price}
+              quantity={item.quantity}
+              setQuantity={(q) => handleQuantityChange(item.cart_item_id, q)} // ใช้ cart_item_id
+              imageSource={{ uri: imageUri }}
+              onDelete={() => handleDelete(item.cart_item_id)} // ใช้ cart_item_id
+            />
+          );
+        })}
+      </ScrollView>
 
       <TouchableOpacity
         onPress={handlePress}
-        className="bg-[#85BEFF] mt-10 mx-28 py-3 rounded-3xl"
+        className="bg-[#85BEFF] mt-5 mx-28 py-3 rounded-3xl"
       >
         <Text className="text-center text-lg font-medium">Check out</Text>
       </TouchableOpacity>

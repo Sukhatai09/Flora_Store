@@ -11,11 +11,8 @@ import userRoutes from "./routes/userRoutes.js";
 import orderItemRoutes from "./routes/orderItemRoutes.js";
 import flowerLikeRoutes from "./routes/flowerLikeRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
-<<<<<<< HEAD
-import cartitemRoutes from "./routes/cartitemRoutes.js";
+import cartItemsRoutes from "./routes/cartItemRoutes.js"
 
-=======
->>>>>>> sukhatai
 
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
@@ -36,10 +33,7 @@ app.use('/api',userRoutes);
 app.use('/api',orderItemRoutes);
 app.use('/api',flowerLikeRoutes);
 app.use('/api',cartRoutes);
-<<<<<<< HEAD
-app.use('/api',cartitemRoutes);
-=======
->>>>>>> sukhatai
+app.use('/api',cartItemsRoutes)
 
 app.get("/", (req, res) => {
   res.send("Hello World!");

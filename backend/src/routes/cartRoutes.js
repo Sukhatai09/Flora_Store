@@ -3,18 +3,9 @@ import {getcart,createcart,deletecart} from "../controller/cartController.js"
 import prisma from "../prismaClient.js";
 const router = express.Router();
 
+
 router.get("/cart",getcart)
 router.delete("/cart/:id",deletecart)
-<<<<<<< HEAD
-router.post("/cart",(req,res)=>{
-   try {
-    res.send("hello")
-   }
-   catch (error) {
-    res.status(400).json({ error: error.message });
-   }
-})
-=======
 router.post("/cart",async(req,res)=>{
     try{
         const id = req.body.customer_id
@@ -32,7 +23,6 @@ router.post("/cart",async(req,res)=>{
         console.log(error)
         return res.status(500).json({message:"Internal server error"})
     }})
->>>>>>> sukhatai
 
 
 
