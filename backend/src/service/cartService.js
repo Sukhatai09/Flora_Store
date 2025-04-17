@@ -10,7 +10,7 @@ export const getcartservice = async () => {
 export const createcartservice = async (customer_id) => {
     return await prisma.cart.create({
         data: {
-            customer_id: customer_id
+            customer_id,
         }
     })
 
