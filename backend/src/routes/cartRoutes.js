@@ -3,6 +3,7 @@ import {getcart,createcart,deletecart} from "../controller/cartController.js"
 import prisma from "../prismaClient.js";
 const router = express.Router();
 
+
 router.get("/cart",getcart)
 router.delete("/cart/:id",deletecart)
 router.post("/cart",async(req,res)=>{

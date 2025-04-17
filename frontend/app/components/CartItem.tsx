@@ -7,7 +7,7 @@ interface CartItemProps {
   price: number;
   imageSource: ImageSourcePropType;
   quantity: number;
-  setQuantity: React.Dispatch<React.SetStateAction<number>>;
+  setQuantity: (newQuantity: number) => void;
   onDelete: () => void;
 }
 
@@ -34,14 +34,16 @@ const CartItem: React.FC<CartItemProps> = ({
 
         <View className="flex-row items-center mt-2">
           <TouchableOpacity
-            onPress={() => setQuantity(prev => Math.max(prev - 1, 1))}
+            onPress={() => setQuantity(Math.max(quantity - 1, 1))}
             className="bg-[#DCB1F6] px-3 py-1 rounded-full"
           >
             <MaterialCommunityIcons name="minus" size={18} color="black" />
           </TouchableOpacity>
+
           <Text className="mx-4 text-lg">{quantity}</Text>
+
           <TouchableOpacity
-            onPress={() => setQuantity(prev => prev + 1)}
+            onPress={() => setQuantity(quantity + 1)}
             className="bg-[#DCB1F6] px-3 py-1 rounded-full"
           >
             <MaterialCommunityIcons name="plus" size={18} color="black" />
