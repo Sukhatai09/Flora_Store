@@ -1,5 +1,5 @@
 import z from "zod";
-import { createOrderService } from "../service/orderService.js";
+import { createOrderService,getAllOrdersService,deleteOrderService} from "../service/orderService.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -10,6 +10,16 @@ const orderSchema = z.object({
     shipping_address: z.string(),
     payment_method: z.string()
 });
+
+export const getAllOrder = async (req, res) => {
+    try {
+        const orders = await getAllOrdersService();
+        res.status(200).json(orders);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
 
 export const createOrder = async (req, res) => {
     try {
@@ -27,5 +37,19 @@ export const createOrder = async (req, res) => {
             console.error(err);
             res.status(500).json({ message: "Internal server error" });
         }
+    }
+}
+export const deleteOrder = async (req, res) => {
+    
+    try {
+        const { id } = req.params;
+        const deletedOrder = await deleteOrderService(id);
+        res.status(200).json({
+            message: "Order deleted successfully",
+            data: deletedOrder,
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Internal server error" });
     }
 }
