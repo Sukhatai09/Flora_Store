@@ -24,3 +24,14 @@ export const deleteOrderService = async (id) => {
     },
   });
 };
+
+export const updateOrderService = async (id, status) => {
+    return await prisma.order.update({
+        where: {
+        order_id: id,
+        },
+        data: {
+        status: status,
+        },
+    });
+}
