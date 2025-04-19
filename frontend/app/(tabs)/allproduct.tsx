@@ -56,7 +56,7 @@ const AllProduct = () => {
         setPage(currentPage + 1)
       }
     } catch (error) {
-      console.error("Error fetching flower data:", error)
+      setFlowers([])
     } finally {
       setLoading(false)
       isFetching.current = false
@@ -70,7 +70,7 @@ const AllProduct = () => {
       const liked = res.data.flowerLikes.map((like: any) => like.flower_id)
       setLikedItems(liked)
     } catch (error) {
-      console.error("Error fetching liked flowers:", error)
+      
     }
   }
 

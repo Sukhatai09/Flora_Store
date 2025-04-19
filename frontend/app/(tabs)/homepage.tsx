@@ -10,6 +10,7 @@ import {
   NativeSyntheticEvent,
   ScrollView,
   RefreshControl,
+  ActivityIndicator,
 } from 'react-native';
 import ProductShow from '../components/ProductShow';
 import ShowseeAll from '../components/ShowseeAll';
@@ -43,7 +44,6 @@ interface FlowerDetail {
   image_url: string;
 }
 
-// เพิ่ม interface สำหรับ ProductShow
 interface ProductShowItem {
   id: string;
   name: string;
@@ -81,6 +81,7 @@ export default function App() {
   const [cartItems, setCartItems] = useState<CartEntry[]>([]);
   const [flowerDetails, setFlowerDetails] = useState<Record<string, FlowerDetail>>({});
   const [refreshing, setRefreshing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const customer = useAuthStore((state) => state.customer);
   const flatListRef = useRef<FlatList>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -89,19 +90,24 @@ export default function App() {
   const fetchFlowers = async () => {
     try {
       const response = await axios.get(`${API_URL}/flower`);
-      setFlowers(response.data.data);
+      setFlowers(response.data.data || []);
     } catch (error) {
       console.error('Error fetching flower data:', error);
+      setFlowers([]);
     }
   };
 
   const fetchFavoriteFlowers = async () => {
-    if (!customer?.customer_id) return;
+    if (!customer?.customer_id) {
+      setFavoriteProducts([]);
+      setLikedItems([]);
+      return;
+    }
     try {
       const response = await axios.get(`${API_URL}/flowerLikes/${customer.customer_id}`);
-      const flowerLikes = response.data.flowerLikes;
+      const flowerLikes = response.data.flowerLikes || [];
 
-      if (!flowerLikes || flowerLikes.length === 0) {
+      if (!flowerLikes.length) {
         setFavoriteProducts([]);
         setLikedItems([]);
         return;
@@ -109,15 +115,16 @@ export default function App() {
 
       const flowerDetailPromises = flowerLikes.map(async (like: any) => {
         const flowerRes = await axios.get(`${API_URL}/flower/${like.flower_id}`);
-        if (flowerRes.status !== 200) throw new Error('Failed to fetch flower details');
         return flowerRes.data.data[0];
       });
 
       const flowerDetails = await Promise.all(flowerDetailPromises);
-      setFavoriteProducts(flowerDetails);
+      setFavoriteProducts(flowerDetails.filter(Boolean));
       setLikedItems(flowerLikes.map((like: any) => like.flower_id));
     } catch (error) {
-      console.error('Error fetching favorite flowers:', error);
+    
+      setFavoriteProducts([]);
+      setLikedItems([]);
     }
   };
 
@@ -136,14 +143,14 @@ export default function App() {
         );
       }
     } catch (error) {
-      console.error('Error removing flower like:', error);
+      setFavoriteProducts([])
     }
   };
 
   const fetchCartItems = async () => {
     try {
       const res = await axios.get(`${API_URL}/cartItems`);
-      const items: CartEntry[] = res.data;
+      const items: CartEntry[] = res.data || [];
       setCartItems(items);
 
       const detailPromises = items.map((item) =>
@@ -161,6 +168,8 @@ export default function App() {
       setFlowerDetails(detailMap);
     } catch (error) {
       console.error('Error fetching cart or flower details:', error);
+      setCartItems([]);
+      setFlowerDetails({});
     }
   };
 
@@ -171,12 +180,14 @@ export default function App() {
   };
 
   useEffect(() => {
-    fetchFlowers();
-    fetchFavoriteFlowers();
-    fetchCartItems();
+    const loadData = async () => {
+      setIsLoading(true);
+      await Promise.all([fetchFlowers(), fetchFavoriteFlowers(), fetchCartItems()]);
+      setIsLoading(false);
+    };
+    loadData();
   }, [customer?.customer_id]);
 
-  // ปรับ carts ให้ชัดเจนว่าเป็น ProductShowItem[]
   const carts: ProductShowItem[] = cartItems
     .map((item) => {
       const flower = flowerDetails[item.flower_id];
@@ -230,12 +241,29 @@ export default function App() {
     setTimeout(() => setIsAutoScroll(true), 10);
   };
 
+  // Component for empty state
+  const EmptyState = ({ message }: { message: string }) => (
+    <View className="items-center py-8">
+      <MaterialCommunityIcons name="flower-outline" size={48} color="#666" />
+      <Text className="text-gray-500 text-lg mt-4">{message}</Text>
+    </View>
+  );
+
+  if (isLoading) {
+    return (
+      <View className="flex-1 bg-white justify-center items-center">
+        <ActivityIndicator size="large" color="#85BEFF" />
+        <Text className="mt-4 text-gray-600">กำลังโหลดข้อมูล...</Text>
+      </View>
+    );
+  }
+
   return (
     <View className="flex-1 bg-white">
       <Topbar />
       <ScrollView
-        className="w-full "
-        contentContainerStyle={{ paddingTop: 0, paddingBottom: 180 }} 
+        className="w-full"
+        contentContainerStyle={{ paddingTop: 0, paddingBottom: 180 }}
         showsVerticalScrollIndicator={true}
         refreshControl={
           <RefreshControl
@@ -256,7 +284,7 @@ export default function App() {
           onMomentumScrollEnd={onScrollEnd}
           renderItem={({ item }) => (
             <View style={{ width }} className="items-center pt-10 h-56">
-              <View
+              <	View
                 style={{ backgroundColor: item.bgColor }}
                 className="w-[80%] h-full rounded-[40px] py-10 pl-5 flex-row"
               >
@@ -278,22 +306,34 @@ export default function App() {
         </View>
 
         <ShowseeAll name="Flower bouquet" haf="allproduct" />
-        <ProductShow products={products} />
+        {products.length > 0 ? (
+          <ProductShow products={products} />
+        ) : (
+          <EmptyState message="ไม่มีช่อดอกไม้ในขณะนี้" />
+        )}
 
         <ShowseeAll name="favorite" haf="favorite" />
-        <ProductFav
-          products={favoriteProducts.map((item) => ({
-            id: item.flower_id,
-            name: item.name,
-            price: item.price.toString(),
-            image: item.image_url,
-          }))}
-          likedItems={likedItems}
-          deleteFlowerLike={deleteFlowerLike}
-        />
+        {favoriteProducts.length > 0 ? (
+          <ProductFav
+            products={favoriteProducts.map((item) => ({
+              id: item.flower_id,
+              name: item.name,
+              price: item.price.toString(),
+              image: item.image_url,
+            }))}
+            likedItems={likedItems}
+            deleteFlowerLike={deleteFlowerLike}
+          />
+        ) : (
+          <EmptyState message="ไม่มีรายการโปรด" />
+        )}
 
         <ShowseeAll name="carts" haf="carts" />
-        <ProductShow products={carts} />
+        {carts.length > 0 ? (
+          <ProductShow products={carts} />
+        ) : (
+          <EmptyState message="ไม่มีสินค้าในตะกร้า" />
+        )}
       </ScrollView>
     </View>
   );
