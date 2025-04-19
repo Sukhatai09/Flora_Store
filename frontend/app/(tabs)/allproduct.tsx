@@ -136,7 +136,7 @@ const AllProduct = () => {
       <Topbar />
       <ScrollView
         className="w-full"
-        contentContainerStyle={{ paddingTop: 0 }}
+        contentContainerStyle={{ paddingTop: 0, paddingBottom: 180 }} 
         onScroll={handleScroll}
         scrollEventThrottle={400}
         showsVerticalScrollIndicator={false}
@@ -158,7 +158,7 @@ const AllProduct = () => {
 
             return (
               <TouchableOpacity
-                key={item.flower_id}
+                key={item.flower_id} 
                 onPress={() => router.push(`/(screen)/${item.flower_id}`)}
                 className="bg-[#DDCDF7] items-center w-[120px] h-[170px] py-4 relative rounded-md"
               >

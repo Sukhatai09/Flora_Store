@@ -8,3 +8,10 @@ export const createcartItemService = async (cartItem) => {
         data: cartItem
     })
 }
+
+
+export const deletecartItemService = async (cart_item_id) => {
+    return await prisma.cartItem.delete({
+        where: { cart_item_id: cart_item_id }
+    });
+}

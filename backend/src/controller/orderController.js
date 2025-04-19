@@ -6,7 +6,7 @@ dotenv.config();
 const orderSchema = z.object({
     customer_id: z.string(),  // << ต้องมี
     total_amount: z.number().positive("Total amount must be a positive number"),
-    status: z.enum(["pending", "completed", "shipped"]).optional(),
+    status: z.enum(["pending", "completed"]).optional(),
     shipping_address: z.string(),
     payment_method: z.string()
 });
@@ -28,7 +28,7 @@ export const createOrder = async (req, res) => {
         const newOrder = await createOrderService(validatedData);
         res.status(201).json({
             message: "Order created successfully",
-            data: newOrder,
+            order_id: newOrder.order_id,
         });
     } catch (err) {
         if (err instanceof z.ZodError) {

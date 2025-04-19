@@ -34,7 +34,9 @@ export const getallOrderItem = async (req, res) => {
 
 export const createOrderItem = async (req, res) => {
   try {
+    console.log("first")
     const validatedData = orderItemSchema.parse(req.body);
+    console.log(req.body);
     const { quantity } = validatedData;
     const flower = await prisma.flower.findUnique({
       where: {
@@ -59,6 +61,7 @@ export const createOrderItem = async (req, res) => {
     });
   } catch (err) {
     if (err instanceof z.ZodError) {
+      console.log(err)
       res.status(400).json({ message: err.errors });
     } else {
       console.error(err);

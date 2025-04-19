@@ -1,3 +1,4 @@
+//carts.tsx 
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -89,12 +90,37 @@ const FlowersScreen: React.FC = () => {
       delete updated[cartItemId];
       return updated;
     });
+    try {
+      await axios.delete(`${API_URL}/cartItems`, {
+        data: {
+          cart_item_id: cartItemId
+        }
+      });
+    } catch (error) {
+      console.error('Error deleting cart item:', error);
+      alert('ไม่สามารถลบสินค้าออกจากตะกร้าได้');
+    }
   };
 
   // ฟังก์ชันไปยังหน้าชำระเงิน
-  const handlePress = () => {
-    router.push('/(screen)/pay');
-  };
+// เพิ่มก่อนกด router.push เพื่อเตรียมข้อมูล
+// เพิ่มฟังก์ชันคำนวณข้อมูลสินค้าเพื่อส่งไป pay
+const handlePress = () => {
+  const payload = cartItems.map(item => {
+    const flower = flowerDetails[item.flower_id];
+    return {
+      name: flower.name,
+      quantity: item.quantity,
+      price: flower.price,
+      flower_id: flower.flower_id,
+      image_url: `${API_URL?.replace(/\/api$/, "").replace(/\/$/, "")}/${flower.image_url?.replace(/^(\.\/)/, '').replace(/\\/g, '/')}`,
+    };
+  });
+
+  const encoded = encodeURIComponent(JSON.stringify(payload));
+  router.push(`/(screen)/pay?cart=${encoded}`);
+};
+
 
   return (
     <View className="flex-1 bg-white">
@@ -124,7 +150,7 @@ const FlowersScreen: React.FC = () => {
 
       <TouchableOpacity
         onPress={handlePress}
-        className="bg-[#85BEFF] mt-5 mx-28 py-3 rounded-3xl"
+        className="bg-[#85BEFF] mt-5 mx-28 py-3 mb-10 rounded-3xl"
       >
         <Text className="text-center text-lg font-medium">Check out</Text>
       </TouchableOpacity>

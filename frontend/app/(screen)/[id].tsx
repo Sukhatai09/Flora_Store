@@ -8,10 +8,11 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React, { useState, useEffect } from "react";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams, useRouter } from "expo-router";
 import Topbar from "../components/topbar";
 import axios from "axios";
 import Contants from "expo-constants";
+import { useAuthStore } from "@/store/flora_store";
 
 type Flower = {
   flower_id: string;
@@ -27,6 +28,9 @@ const details = () => {
   const [image, setImage] = useState("");
   const [data, setData] = useState<Flower>();
   const [quantity, setQuantity] = useState(1);
+  const customer = useAuthStore((state) => state.customer);
+  const router = useRouter();
+  const [show, setShow] = useState("Add to cart");
   const { id } = useLocalSearchParams();
 
   useEffect(() => {
@@ -51,6 +55,25 @@ const details = () => {
     alert("You can only add up to 5 items to the cart.");
     setQuantity(5);
   }
+
+  const handleAddToCart = async () => {
+    console.log("Add to cart pressed");
+  
+    const flowerId = id;
+  
+    try {
+      const response = await axios.post(`${API_URL}/cartItems`, {
+        customerid: customer?.customer_id,
+        flower_id: flowerId,
+        quantity: quantity,
+      });
+      console.log(response.data);
+      router.push("/carts");
+    } catch (error) {
+      console.error("Add to cart error:", error);
+    }
+  };
+  
   return (
     <View>
       <Topbar />
@@ -100,8 +123,10 @@ const details = () => {
         </ScrollView>
       </View>
       <View className=" px-4 absolute bottom-[-30] w-full">
-        <TouchableOpacity className="bg-[#967BB6] w-full h-[50px] rounded-full items-center justify-center">
-          <Text className="text-xl font-bold text-white">Add to cart</Text>
+        <TouchableOpacity 
+        onPress={()=>handleAddToCart()}
+        className="bg-[#967BB6] w-full h-[50px] rounded-full items-center justify-center">
+          <Text className="text-xl font-bold text-white">{show} </Text>
         </TouchableOpacity>
       </View>
     </View>
