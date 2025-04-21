@@ -38,7 +38,7 @@
       "typedRoutes": true
     },
     "extra":{
-      "API_URL": "https://0d4d-1-46-29-69.ngrok-free.app/api"
+      "API_URL": "http://172.20.10.4:5000/api"
     }
   }
 }
