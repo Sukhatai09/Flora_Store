@@ -5,6 +5,8 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient(); // สร้าง instance ขึ้นมา
 const authshcema = z.object({
   email: z.string().email().min(1, "Email is required"),
   password: z.string().min(8, "Password must be at least 8 characters long"),
@@ -77,12 +79,11 @@ export const login = async(req, res) => {
   
 
 };
-
 export const register = async (req, res) => {
   try {
     const validateData = authshcema.parse(req.body);
     const { password } = validateData;
-    const fileUrl = req.file?.path; // ดึง path จาก multer upload
+    const fileUrl = req.file?.path;
     const salt = bcrypt.genSaltSync(10);
     const hashPassword = bcrypt.hashSync(password, salt);
 
@@ -92,11 +93,32 @@ export const register = async (req, res) => {
       image_url: fileUrl,
     };
 
-    await registerService(userData);
+    // Create user
+    const userdata = await registerService(userData); // สมมุติว่า return ข้อมูลผู้ใช้
+    const customer_id = userdata.customer_id;
+    console.log("customer_id", customer_id);
+    // ตรวจสอบว่ามี cart อยู่แล้วหรือยัง
+    const cart = await prisma.cart.findUnique({
+      where: { customer_id },
+      select: { cart_id: true }
+    });
+
+    // ถ้าไม่มีให้สร้างใหม่
+    if (!cart) {
+      await prisma.cart.create({
+        data: {
+          customer_id,
+          updated_at: new Date(),
+        }
+      });
+    }
+
+    console.log("customer_id", customer_id);
+
     res.status(201).json({ message: "User created successfully!" });
+
   } catch (err) {
     if (err instanceof z.ZodError) {
-      // Handle Zod validation error
       return res.status(400).json({ message: err.errors });
     }
     res.status(400).json({ message: err.message });
