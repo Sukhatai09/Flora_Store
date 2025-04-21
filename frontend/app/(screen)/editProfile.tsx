@@ -6,13 +6,15 @@ import {
   TextInput,
   ScrollView,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useRouter } from "expo-router";
 import { useAuthStore } from "@/store/flora_store";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 import Contants from "expo-constants";
+import { useLocalSearchParams } from "expo-router";
+import { UserInfo } from "../types/userProfile";
 
 const API_URL = Contants.expoConfig?.extra?.API_URL;
 
@@ -20,19 +22,37 @@ const EditProfile = () => {
   const refresh = useAuthStore((state) => state.refresh);
   const customer = useAuthStore((state) => state.customer);
   const route = useRouter();
+  const { customer_id } = useLocalSearchParams(); 
+  const [profile, setProfile] = useState<UserInfo>();
+  const imageUri = `${API_URL?.replace(/\/api$/, "").replace(/\/$/, "")}/${profile?.image_url?.replace(/^(\.\/)/, '').replace(/\\/g, '/')}`;
 
-  const imageUri = `${API_URL?.replace(/\/api$/, "").replace(
-    /\/$/,
-    ""
-  )}/${customer?.image_url?.replace(/^(\.\/)/, "").replace(/\\/g, "/")}`;
-
-  const [name, setName] = useState(customer?.first_name + " " + customer?.last_name);
+  const [name, setName] = useState("");
   const [image, setImage] = useState(imageUri);
-  const [email, setEmail] = useState(`${customer?.email}`);
-  const [phone, setPhone] = useState(`${customer?.phone_number}`);
-  const [address, setAddress] = useState(`${customer?.address}`);
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
   const [imageFile, setImageFile] = useState<ImagePicker.ImagePickerAsset | null>(null); // <- เพิ่มตัวแปรเก็บไฟล์ใหม่
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await axios.get(`${API_URL}/user/${customer_id}`);
+        const userData = res.data.data;
+        setProfile(userData);
+  
+        setName(`${userData.first_name} ${userData.last_name}`);
+        setEmail(userData.email);
+        setPhone(userData.phone_number);
+        setAddress(userData.address);
+      } catch (err: any) {
+        console.error(err.message);
+        console.error(err.response?.data?.message);
+      }
+    };
+  
+    fetchProfile();
+  }, []);
 
+  
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images, 
@@ -67,12 +87,15 @@ const EditProfile = () => {
         type,
       } as any);
     }
-
-    await axios.put(`${API_URL}/user/${customer?.customer_id}`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    try {
+      await axios.put(`${API_URL}/user/${customer?.customer_id}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+    }catch(err){
+      console.error(err);    
+    }
     
     // await refresh(); // เรียกใช้ refresh หลังจากอัพเดตข้อมูลเสร็จ
     alert(
@@ -81,6 +104,7 @@ const EditProfile = () => {
       "\nphone: " + phone +
       "\naddress: " + address
     );
+    handleBack();
   };
 
   const handleBack =() => {
@@ -115,8 +139,8 @@ const EditProfile = () => {
           <TouchableOpacity onPress={pickImage}>
             <Image
               source={{
-                uri: image
-                  ? image
+                uri: imageUri
+                  ? imageUri
                   : "https://media.istockphoto.com/id/1278459951/th/เวคเตอร์/ตัวการ์ตูนดอกไม้น่ารัก.jpg",
               }}
               className="w-44 h-44 rounded-full mr-15 items-center"

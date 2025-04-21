@@ -1,6 +1,7 @@
 import express from "express";
-import {getcartItem,createcartItem, deletecartItem } from "../controller/cartItemController.js";
+import {getcartItem,createcartItem, deletecartItem, getcartItemID } from "../controller/cartItemController.js";
 import prisma from "../prismaClient.js";
+
 
 
 const router = express.Router();
@@ -20,6 +21,7 @@ router.put("/cartItems", async (req, res) => {
     }
 });
 router.get("/cartItems", getcartItem);
+router.get("/cartItems/:id", getcartItemID);
 router.post("/cartItems", createcartItem);
 router.delete("/cartItems", deletecartItem);
 

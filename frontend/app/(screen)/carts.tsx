@@ -6,6 +6,7 @@ import Topbar from '../components/topbar';
 import CartItem from '../components/CartItem';
 import axios from 'axios';
 import Constants from 'expo-constants';
+import { useAuthStore } from '@/store/flora_store';
 
 const API_URL = Constants.expoConfig?.extra?.API_URL;
 
@@ -26,11 +27,17 @@ const FlowersScreen: React.FC = () => {
   const router = useRouter();
   const [cartItems, setCartItems] = useState<CartEntry[]>([]);
   const [flowerDetails, setFlowerDetails] = useState<Record<string, FlowerDetail>>({});
-
+  const customer = useAuthStore((state) => state.customer)
   // ฟังก์ชันดึงข้อมูลตะกร้าสินค้า
   const fetchCartItems = async () => {
     try {
-      const res = await axios.get(`${API_URL}/cartItems`);
+
+
+      const resCustomerid = await axios.get(`${API_URL}/cart/${customer?.customer_id}`);
+      const cart_id = resCustomerid.data.cart_id;
+
+
+      const res = await axios.get(`${API_URL}/cartItems/${cart_id}`);
       const items: CartEntry[] = res.data;
       setCartItems(items);
 
