@@ -21,6 +21,31 @@ export const getcartItem = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 }
+
+
+export const getcartItemID = async (req, res) => {
+    // กำหนด Cache-Control header
+
+
+    const card_item = req.params.id;
+    console.log("fdsfsdfds");
+    console.log(card_item);
+
+    try {
+        const data = await prisma.cartItem.findMany({
+            where: { cart_id: card_item }
+        });
+        
+        res.status(200).json(data);
+
+        // ส่งข้อมูลกลับไปยัง client
+        return data
+    } catch (error) {
+        console.error("Error fetching cart items:", error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
 export const createcartItem = async (req, res) => {
     try {
         const customerID = req.body.customerid;

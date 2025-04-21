@@ -80,15 +80,15 @@ model FlowerLike {
   Flower   Flower   @relation(fields: [flower_id], references: [flower_id])
 }
 
-model Cart {
-  cart_id     String   @id @default(uuid())
-  customer_id String   @unique
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
+  model Cart {
+    cart_id     String   @id @default(uuid())
+    customer_id String   @unique
+    created_at  DateTime @default(now())
+    updated_at  DateTime @updatedAt
 
-  Customer  Customer   @relation(fields: [customer_id], references: [customer_id])
-  CartItems CartItem[]
-}
+    Customer  Customer   @relation(fields: [customer_id], references: [customer_id])
+    CartItems CartItem[]
+  }
 
 model CartItem {
   cart_item_id String   @id @default(uuid())

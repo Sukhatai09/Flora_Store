@@ -1,23 +1,37 @@
 import { View, Text, TouchableOpacity, Image } from "react-native";
-import React from "react";
+import React,{useEffect, useState} from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { router, useRouter } from "expo-router";
 import {useAuthStore} from "../../store/flora_store";
 import Contants from 'expo-constants';
-
+import axios from "axios";
+import { UserInfo } from "../types/userProfile";
 
 const API_URL = Contants.expoConfig?.extra?.API_URL ;
 
 const profile = () => {
   const route = useRouter();
   const user = useAuthStore((state) => state.customer);
-
-  const imageUri = `${API_URL?.replace(/\/api$/, "").replace(/\/$/, "")}/${user?.image_url?.replace(/^(\.\/)/, '').replace(/\\/g, '/')}`;
-
+  
+  
+  const [profile, setProfile] = useState<UserInfo>();
+  const imageUri = `${API_URL?.replace(/\/api$/, "").replace(/\/$/, "")}/${profile?.image_url?.replace(/^(\.\/)/, '').replace(/\\/g, '/')}`;
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try{
+        const res = await axios.get(`${API_URL}/user/${user?.customer_id}`);
+        setProfile(res.data.data);
+      }catch(err:any){
+        console.error(err.message);
+        console.error(err.response.data.message);
+      };
+    }
+    fetchProfile();
+  },[profile])
 
   console.log(imageUri)
-  
+ 
   const handlePress = () => {
     //@ts-ignore
     route.push("/");
@@ -37,7 +51,7 @@ const profile = () => {
         <View className="flex-1 flex-row items-start w-full  justify-center mb-5  ml-20">
           <Image
             source={{
-              uri: user?.image_url
+              uri: imageUri
           ? `${imageUri}`
           : "https://media.istockphoto.com/id/1278459951/th/%E0%B9%80%E0%B8%A7%E0%B8%84%E0%B9%80%E0%B8%95%E0%B8%AD%E0%B8%A3%E0%B9%8C/%E0%B8%95%E0%B8%B1%E0%B8%A7%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%8C%E0%B8%95%E0%B8%B9%E0%B8%99%E0%B8%94%E0%B8%AD%E0%B8%81%E0%B9%84%E0%B8%A1%E0%B9%89%E0%B8%99%E0%B9%88%E0%B8%B2%E0%B8%A3%E0%B8%B1%E0%B8%81.jpg?s=170667a&w=0&k=20&c=1snRE0T583NOiDWDPwR0OttWcHLZxE5hWeZ8ysvIJ4U="
             }}
@@ -57,7 +71,7 @@ const profile = () => {
               className="bg-[#FFCFDA] w-[300px] h-[50px] rounded-full items-center justify-center"
               
             >
-              <Text className="text-xl font-bold text-black">{bockData.name}</Text>
+              <Text className="text-xl font-bold text-black">{profile?.first_name} {profile?.last_name}</Text>
             </View>
           </View>
 
@@ -77,7 +91,7 @@ const profile = () => {
               className="bg-[#FFCFDA] w-[300px] h-[50px] rounded-full items-center justify-center"
               
             >
-              <Text className="text-xl font-bold text-black">{bockData.phone}</Text>
+              <Text className="text-xl font-bold text-black">{profile?.phone_number}</Text>
             </View>
           </View>
         </View>
