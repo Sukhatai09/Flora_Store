@@ -149,10 +149,15 @@ export default function App() {
 
   const fetchCartItems = async () => {
     try {
-      const res = await axios.get(`${API_URL}/cartItems`);
-      const items: CartEntry[] = res.data || [];
-      setCartItems(items);
 
+      
+      const resCustomerid = await axios.get(`${API_URL}/cart/${customer?.customer_id}`);
+      const cart_id = resCustomerid.data.cart_id;
+
+
+      const res = await axios.get(`${API_URL}/cartItems/${cart_id}`);
+      const items: CartEntry[] = res.data;
+      setCartItems(items);
       const detailPromises = items.map((item) =>
         axios.get(`${API_URL}/flower/${item.flower_id}`)
       );
