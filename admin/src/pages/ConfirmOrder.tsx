@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { BASE_URL } from "../api/endpoint.api";
+import { toast } from "react-toastify";
 
 interface OrderItem {
   order_item_id: string;
@@ -70,10 +71,14 @@ const ConfirmOrder: React.FC = () => {
       });
 
       setOrders((prev) => prev.filter((order) => order.order_id !== orderId));
-      alert("ยืนยันคำสั่งซื้อเรียบร้อยแล้ว");
+      toast.success("ยืนยันคำสั่งซื้อเรียบร้อยแล้ว", {
+        position: "bottom-right",
+      });
     } catch (error) {
       console.error("Error confirming order:", error);
-      alert("เกิดข้อผิดพลาดในการยืนยันคำสั่งซื้อ");
+      toast.error("เกิดข้อผิดพลาดในการยืนยันคำสั่งซื้อ", {
+        position: "bottom-right",
+      });
     }
   };
 
@@ -81,11 +86,22 @@ const ConfirmOrder: React.FC = () => {
     try {
       await axios.delete(`${BASE_URL}/order/${orderId}`);
       setOrders((prev) => prev.filter((order) => order.order_id !== orderId));
-      alert("ลบคำสั่งซื้อเรียบร้อยแล้ว");
+      toast.success("ลบคำสั่งซื้อเรียบร้อยแล้ว", {
+        position: "bottom-right",
+      });
     } catch (err) {
       console.error("Error deleting order:", err);
-      alert("เกิดข้อผิดพลาดในการลบคำสั่งซื้อ");
+      toast.error("เกิดข้อผิดพลาดในการลบคำสั่งซื้อ", {
+        position: "bottom-right",
+      });
     }
+  };
+
+  const handleAlert = () => {
+    toast.error("Order already completed!", {
+      position: "bottom-right",
+    });
+
   };
 
   return (
@@ -147,14 +163,24 @@ const ConfirmOrder: React.FC = () => {
 
           <div className="border-l-4 border-white flex flex-col gap-2 items-center justify-center">
             <button
-              className="bg-green-400 hover:bg-green-500 text-white font-bold py-1 px-4 rounded-full shadow"
+              className={
+                "bg-green-400 hover:bg-green-500 text-white font-bold py-1 px-4 rounded-full shadow"
+              }
               onClick={() => handleConfirm(order.order_id)}
             >
-              ✅ Confirm
+              {order.status === "completed" ? "✔️Completed" : "✔️Confirm"}
             </button>
             <button
-              onClick={() => handleDelete(order.order_id)}
-              className="bg-red-400 hover:bg-red-500 text-white font-bold py-1 px-4 rounded-full shadow"
+              onClick={
+                order.status === "completed"
+                  ? handleAlert
+                  : () => handleDelete(order.order_id)
+              }
+              className={
+                order.status === "completed"
+                  ? "bg-gray-400 hover:bg-gray-500 text-white font-bold py-1 px-4 rounded-full shadow"
+                  : "bg-red-400 hover:bg-red-500 text-white font-bold py-1 px-4 rounded-full shadow"
+              }
             >
               ❌ Cancel
             </button>

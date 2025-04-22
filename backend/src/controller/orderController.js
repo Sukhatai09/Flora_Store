@@ -25,7 +25,14 @@ export const createOrder = async (req, res) => {
     try {
         
         const validatedData = orderSchema.parse(req.body);
-        const newOrder = await createOrderService(validatedData);
+
+        const data = {
+            ...validatedData,
+            status : "pending",
+
+        }
+        const newOrder = await createOrderService(data);
+
         res.status(201).json({
             message: "Order created successfully",
             order_id: newOrder.order_id,

@@ -1,5 +1,7 @@
 import React, { useState, useEffect, FormEvent } from 'react';
 import axios from 'axios';
+import { toast } from "react-toastify";
+import { BASE_URL } from "../api/endpoint.api";
 
 interface Flower {
   flower_id: string;
@@ -27,7 +29,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/flower?page=1&limit=30');
+        const response = await axios.get(`${BASE_URL}/flower?page=1&limit=30`);
         setNewFlowers(response.data.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -41,12 +43,12 @@ const Home: React.FC = () => {
     e.preventDefault();
 
     if (!imageFile) {
-      alert('กรุณาเลือกรูปภาพก่อน');
+      toast.error('กรุณาเลือกไฟล์ภาพ');
       return;
     }
 
     if (!price || isNaN(Number(price)) || !stockQuantity || isNaN(Number(stockQuantity))) {
-      alert('กรุณากรอกตัวเลขให้ถูกต้องในช่องราคาและจำนวนสต็อก');
+      toast.error('กรุณากรอกข้อมูลราคาและจำนวนในสต็อกให้ถูกต้อง');
       return;
     }
 
@@ -58,11 +60,11 @@ const Home: React.FC = () => {
     formData.append('image_url', imageFile);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/flower', formData, {
+      const response = await axios.post(`${BASE_URL}/flower`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      alert('เพิ่มดอกไม้เรียบร้อยแล้ว');
+      toast.success('เพิ่มดอกไม้ใหม่เรียบร้อยแล้ว!');
       setNewFlowers([...newflowers, response.data.data]);
       setName('');
       setDescription('');
@@ -72,7 +74,7 @@ const Home: React.FC = () => {
       setPreview(null);
     } catch (error) {
       console.error('Error uploading:', error);
-      alert('เกิดข้อผิดพลาดในการอัปโหลด');
+      toast.error('เกิดข้อผิดพลาดในการอัปโหลดข้อมูล');
     }
   };
 
@@ -99,7 +101,7 @@ const Home: React.FC = () => {
         formData.append('image', editImageFile);
       }
 
-      const response = await axios.put(`http://localhost:5000/api/flower/${flower_id}`, formData, {
+      const response = await axios.put(`${BASE_URL}/flower/${flower_id}`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
@@ -115,7 +117,7 @@ const Home: React.FC = () => {
       setEditImagePreview(null);
     } catch (error) {
       console.error('Error updating flower:', error);
-      alert('เกิดข้อผิดพลาดในการอัปเดตดอกไม้');
+      toast.error('เกิดข้อผิดพลาดในการอัปเดตข้อมูล');
     }
   };
 
@@ -124,12 +126,12 @@ const Home: React.FC = () => {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/flower/${flower_id}`);
+      await axios.delete(`${BASE_URL}/flower/${flower_id}`);
       setNewFlowers((prev) => prev.filter((flower) => flower.flower_id !== flower_id));
-      alert('ลบข้อมูลเรียบร้อยแล้ว');
+      toast.success('ลบดอกไม้เรียบร้อยแล้ว!');
     } catch (error) {
       console.error('Error deleting flower:', error);
-      alert('เกิดข้อผิดพลาดในการลบข้อมูล');
+      toast.error('เกิดข้อผิดพลาดในการลบข้อมูล');
     }
   };
 

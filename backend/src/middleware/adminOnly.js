@@ -14,7 +14,7 @@ const adminOnly = (req, res, next) => {
         return;
     }
     if (dataAdmin.role !== 'admin') {
-        res.status(403).json({ message: "AdminOnly" });
+        res.status(403).json({ message: "Access denied. Admins only." });
         return;
     }
     req.user = dataAdmin; 
