@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { BASE_URL } from "../api/endpoint.api";
 
 interface OrderItem {
   order_item_id: string;
@@ -30,30 +31,37 @@ const ConfirmOrder: React.FC = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/order');
+        const response = await axios.get(`${BASE_URL}/order`);
         const allOrders: Order[] = response.data;
+<<<<<<< HEAD
         const paddingOrders = allOrders.filter(order => order.status === 'pending');
         setOrders(paddingOrders);
+=======
+        // const paddingOrders = allOrders.filter(order => order.status === 'padding');
+        setOrders(allOrders);
+>>>>>>> sukhatai
 
         // Load customer names
-        const uniqueCustomerIds = [...new Set(paddingOrders.map(order => order.customer_id))];
+        const uniqueCustomerIds = [
+          ...new Set(allOrders.map((order) => order.customer_id)),
+        ];
 
         const nameMap: CustomerInfo = {};
         await Promise.all(
           uniqueCustomerIds.map(async (id) => {
             try {
-              const res = await axios.get(`http://localhost:5000/api/user/${id}`);
+              const res = await axios.get(`${BASE_URL}/user/${id}`);
               const data = res.data.data;
               nameMap[id] = `${data.first_name} ${data.last_name}`;
             } catch (error) {
-              nameMap[id] = 'ไม่ทราบชื่อ';
+              nameMap[id] = "ไม่ทราบชื่อ";
               console.error(`Error loading customer ${id}:`, error);
             }
           })
         );
         setCustomerNames(nameMap);
       } catch (error) {
-        console.error('Error fetching orders:', error);
+        console.error("Error fetching orders:", error);
       }
     };
 
@@ -62,38 +70,69 @@ const ConfirmOrder: React.FC = () => {
 
   const handleConfirm = async (orderId: string) => {
     try {
-      await axios.put(`http://localhost:5000/api/order/${orderId}`, {
-        status: 'completed'
+      await axios.put(`${BASE_URL}/order/${orderId}`, {
+        status: "completed",
       });
 
-      setOrders(prev => prev.filter(order => order.order_id !== orderId));
-      alert('ยืนยันคำสั่งซื้อเรียบร้อยแล้ว');
+      setOrders((prev) => prev.filter((order) => order.order_id !== orderId));
+      alert("ยืนยันคำสั่งซื้อเรียบร้อยแล้ว");
     } catch (error) {
-      console.error('Error confirming order:', error);
-      alert('เกิดข้อผิดพลาดในการยืนยันคำสั่งซื้อ');
+      console.error("Error confirming order:", error);
+      alert("เกิดข้อผิดพลาดในการยืนยันคำสั่งซื้อ");
+    }
+  };
+
+  const handleDelete = async (orderId: string) => {
+    try {
+      await axios.delete(`${BASE_URL}/order/${orderId}`);
+      setOrders((prev) => prev.filter((order) => order.order_id !== orderId));
+      alert("ลบคำสั่งซื้อเรียบร้อยแล้ว");
+    } catch (err) {
+      console.error("Error deleting order:", err);
+      alert("เกิดข้อผิดพลาดในการลบคำสั่งซื้อ");
     }
   };
 
   return (
     <div className="px-8 py-10 font-sans bg-pink-50 min-h-screen">
-      <div className="grid grid-cols-7 text-center bg-gradient-to-r from-pink-300 to-pink-400 rounded-xl p-4 shadow-md text-white font-bold text-lg overflow-hidden min-h-[80px]">
-        <div className="border-l-4 border-white first:border-0 flex items-center justify-center">Order ID</div>
-        <div className="border-l-4 border-white flex items-center justify-center">Total Items</div>
-        <div className="border-l-4 border-white flex items-center justify-center">Total Price</div>
-        <div className="border-l-4 border-white flex items-center justify-center">Address</div>
-        <div className="border-l-4 border-white flex items-center justify-center">Payment</div>
-        <div className="border-l-4 border-white flex items-center justify-center">Customer</div>
-        <div className="border-l-4 border-white flex items-center justify-center">Action</div>
+      <div className="grid grid-cols-8 text-center bg-gradient-to-r from-pink-300 to-pink-400 rounded-xl p-4 shadow-md text-white font-bold text-lg overflow-hidden min-h-[80px]">
+        <div className="border-l-4 border-white first:border-0 flex items-center justify-center">
+          Order ID
+        </div>
+        <div className="border-l-4 border-white flex items-center justify-center">
+          Total Items
+        </div>
+        <div className="border-l-4 border-white flex items-center justify-center">
+          Total Price
+        </div>
+        <div className="border-l-4 border-white flex items-center justify-center">
+          Address
+        </div>
+        <div className="border-l-4 border-white flex items-center justify-center">
+          Payment
+        </div>
+        <div className="border-l-4 border-white flex items-center justify-center">
+          Status
+        </div>
+        <div className="border-l-4 border-white flex items-center justify-center">
+          Customer
+        </div>
+        <div className="border-l-4 border-white flex items-center justify-center">
+          Action
+        </div>
       </div>
 
       {orders.map((order) => (
         <div
           key={order.order_id}
-          className="grid grid-cols-7 text-center bg-pink-100 rounded-xl p-4 mt-3 shadow-inner items-center overflow-hidden min-h-[100px]"
+          className="grid grid-cols-8 text-center bg-pink-100 rounded-xl p-4 mt-3 shadow-inner items-center overflow-hidden min-h-[100px]"
         >
-          <div className="border-l-4 border-white first:border-0 flex justify-center items-center text-pink-700 font-semibold">{order.order_id}</div>
+          <div className="border-l-4 border-white first:border-0 flex justify-center items-center text-pink-700 font-semibold">
+            {order.order_id}
+          </div>
           <div className="border-l-4 border-white flex justify-center items-center text-pink-700 font-semibold">
-            {order.OrderItems.reduce((sum, item) => sum + item.quantity, 0)} ชิ้น
+            {order.OrderItems.reduce((sum, item) => sum + item.quantity, 0)}{" "}
+            ชิ้น
           </div>
           <div className="border-l-4 border-white flex justify-center items-center text-pink-700 font-semibold">
             ฿{order.OrderItems.reduce((sum, item) => sum + item.price, 0)}
@@ -105,8 +144,12 @@ const ConfirmOrder: React.FC = () => {
             {order.payment_method}
           </div>
           <div className="border-l-4 border-white flex justify-center items-center text-pink-700 font-semibold">
-            {customerNames[order.customer_id] || 'Loading...'}
+            {order.status}
           </div>
+          <div className="border-l-4 border-white flex justify-center items-center text-pink-700 font-semibold">
+            {customerNames[order.customer_id] || "Loading..."}
+          </div>
+
           <div className="border-l-4 border-white flex flex-col gap-2 items-center justify-center">
             <button
               className="bg-green-400 hover:bg-green-500 text-white font-bold py-1 px-4 rounded-full shadow"
@@ -114,7 +157,10 @@ const ConfirmOrder: React.FC = () => {
             >
               ✅ Confirm
             </button>
-            <button className="bg-red-400 hover:bg-red-500 text-white font-bold py-1 px-4 rounded-full shadow">
+            <button
+              onClick={() => handleDelete(order.order_id)}
+              className="bg-red-400 hover:bg-red-500 text-white font-bold py-1 px-4 rounded-full shadow"
+            >
               ❌ Cancel
             </button>
           </div>
