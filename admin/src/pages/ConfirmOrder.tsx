@@ -34,13 +34,8 @@ const ConfirmOrder: React.FC = () => {
       try {
         const response = await axios.get(`${BASE_URL}/order`);
         const allOrders: Order[] = response.data;
-<<<<<<< HEAD
-        const paddingOrders = allOrders.filter(order => order.status === 'pending');
-        setOrders(paddingOrders);
-=======
         // const paddingOrders = allOrders.filter(order => order.status === 'padding');
         setOrders(allOrders);
->>>>>>> sukhatai
 
         // Load customer names
         const uniqueCustomerIds = [
