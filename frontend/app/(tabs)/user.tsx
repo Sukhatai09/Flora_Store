@@ -32,7 +32,7 @@ const user = () => {
       }
     };
     fetchProfile();
-  }, [profile]);
+  }, []);
 
   // useEffect(() => {
   //   const fetchCustomerData = async () => {
@@ -111,7 +111,7 @@ const user = () => {
           </View>
         </View>
 
-        <View className="absolute top-64 gap-10 left-0 w-full itemsx-center">
+        <View className="absolute top-64 w-full items-center gap-10">
           <View>
             <TouchableOpacity
               className="bg-[#FFCFDA] w-[300px] h-[50px] rounded-full items-center justify-center"

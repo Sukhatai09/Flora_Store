@@ -1,9 +1,62 @@
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 import topLogo from "../../assets/Flora-logo.png";
-
+import useAuthStore from '../../store/authStore';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 
 const Login: React.FC = () => {
+  const actionLogin = useAuthStore((state) => state.actionLogin);
+  const actionLogout = useAuthStore((state) => state.actionLogout);
+  const user = useAuthStore((state) => state.user);
+  const navigate = useNavigate();
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
+  useEffect(() => {
+    if (user) {
+      if (user.role === "admin") {
+        navigate("/admin");
+      }
+      if (user.role === "user") {
+        alert("You are not authorized to access this page.");
+        actionLogout();
+      }
+    } else {
+      navigate("/");
+    }
+  }, []);
+
+  
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    try {
+      const res: any = await actionLogin(form);
+
+      if (res.data.user.role !== "admin") {
+        toast.error("คุณไม่มีสิทธิ์เข้าถึง", {
+          position: "bottom-right",
+        });
+        await actionLogout();
+        return;
+      }
+
+      if (res.data.user.role === "admin") {
+        toast.success("เข้าสู่ระบบสำเร็จ", {
+          position: "bottom-right",
+        });
+        navigate("/admin");
+      }
+    } catch (error) {
+      const errorMessage = (error as any).message || "เกิดข้อผิดพลาด";
+      toast.error(errorMessage, {
+        position: "bottom-right",
+      });
+    }
+  };
+  
 
   return (
     <div className="bg-gradient-to-br from-pink-100 to-pink-200 min-h-screen">
@@ -19,12 +72,14 @@ const Login: React.FC = () => {
           <h2 className="text-4xl font-extrabold text-center mb-6 text-white drop-shadow-glow animate-bounce">
             ✨ เข้าสู่ระบบ ✨
           </h2>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="mb-5">
               <label className="block text-[#fff] font-bold mb-2" htmlFor="email">
                  Email
               </label>
               <input
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
                 type="text"
                 id="email"
                 className="border-2 border-white rounded-full w-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-pink-400"
@@ -37,6 +92,8 @@ const Login: React.FC = () => {
                  Password
               </label>
               <input
+                value={form.password}
+                onChange={(e) => setForm({ ...form, password: e.target.value })}
                 type="password"
                 id="password"
                 className="border-2 border-white rounded-full w-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-pink-400"

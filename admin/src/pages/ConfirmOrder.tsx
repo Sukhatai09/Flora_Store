@@ -60,6 +60,20 @@ const ConfirmOrder: React.FC = () => {
     fetchOrders();
   }, []);
 
+  const handleConfirm = async (orderId: string) => {
+    try {
+      await axios.put(`http://localhost:5000/api/order/${orderId}`, {
+        status: 'completed'
+      });
+
+      setOrders(prev => prev.filter(order => order.order_id !== orderId));
+      alert('ยืนยันคำสั่งซื้อเรียบร้อยแล้ว');
+    } catch (error) {
+      console.error('Error confirming order:', error);
+      alert('เกิดข้อผิดพลาดในการยืนยันคำสั่งซื้อ');
+    }
+  };
+
   return (
     <div className="px-8 py-10 font-sans bg-pink-50 min-h-screen">
       <div className="grid grid-cols-7 text-center bg-gradient-to-r from-pink-300 to-pink-400 rounded-xl p-4 shadow-md text-white font-bold text-lg overflow-hidden min-h-[80px]">
@@ -94,7 +108,10 @@ const ConfirmOrder: React.FC = () => {
             {customerNames[order.customer_id] || 'Loading...'}
           </div>
           <div className="border-l-4 border-white flex flex-col gap-2 items-center justify-center">
-            <button className="bg-green-400 hover:bg-green-500 text-white font-bold py-1 px-4 rounded-full shadow">
+            <button
+              className="bg-green-400 hover:bg-green-500 text-white font-bold py-1 px-4 rounded-full shadow"
+              onClick={() => handleConfirm(order.order_id)}
+            >
               ✅ Confirm
             </button>
             <button className="bg-red-400 hover:bg-red-500 text-white font-bold py-1 px-4 rounded-full shadow">

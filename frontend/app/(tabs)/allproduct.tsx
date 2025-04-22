@@ -148,7 +148,7 @@ const AllProduct = () => {
         }
       >
         <View className="w-full flex-row items-center justify-center">
-          <Text className="font-bold text-3xl mt-4">Flower Bouquet</Text>
+          <Text className="font-bold text-3xl mt-4">Flower Bouquet!</Text>
         </View>
 
         <View className="flex-row flex-wrap gap-4 mt-4 px-2 justify-center">

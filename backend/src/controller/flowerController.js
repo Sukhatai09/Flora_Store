@@ -9,7 +9,7 @@ const flowerSchema = z.object({
       const num = Number(val);
       return isNaN(num) ? undefined : num;
     }, z.number().positive("Price must be a positive number")),
-    image_url: z.string(),
+    image_url: z.string().optional(), // image_url is optional for create
     stock_quantity: z.preprocess((val) => {
       const num = Number(val);
       return isNaN(num) ? undefined : num;

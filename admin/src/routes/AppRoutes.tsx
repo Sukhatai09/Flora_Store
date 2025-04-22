@@ -4,6 +4,7 @@ import Layout from '../pages/Layout'
 import Home from '../pages/Home'
 import ConfirmOrder from '../pages/ConfirmOrder'
 import Login from '../pages/auth/Login'
+import Protect from './Protect'
 
 const router = createBrowserRouter([
     {
@@ -13,7 +14,7 @@ const router = createBrowserRouter([
   
     {
         path: '/admin',
-        element: <Layout />,
+        element: <Protect children={<Layout/>} />,
         children: [
             {index: true, element: <Home />},
             {path: 'confirmorder', element: <ConfirmOrder />},
