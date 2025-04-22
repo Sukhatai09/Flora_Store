@@ -12,20 +12,9 @@ export default function PaymentQRScreen() {
   const handleConfirm =  async() => {
 
 
-  try{
-    const respone = await axios.put(`${API_URL}/order/${order_id}`, {
-      status: "completed"
-    })
-    if(respone.status === 200) {
+ 
       Alert.alert("ยืนยันการชำระเงินเรียบร้อยแล้ว");
       router.push("/(tabs)/homepage");
-    }
-  }catch(error){
-
-}
-
-Alert.alert("ยืนยันการชำระเงินเรียบร้อยแล้ว");
-  // router.push("/(screen)/done");
 };
 
   return (

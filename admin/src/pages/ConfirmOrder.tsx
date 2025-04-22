@@ -32,7 +32,7 @@ const ConfirmOrder: React.FC = () => {
       try {
         const response = await axios.get('http://localhost:5000/api/order');
         const allOrders: Order[] = response.data;
-        const paddingOrders = allOrders.filter(order => order.status === 'padding');
+        const paddingOrders = allOrders.filter(order => order.status === 'pending');
         setOrders(paddingOrders);
 
         // Load customer names
