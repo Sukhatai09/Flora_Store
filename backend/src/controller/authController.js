@@ -1,6 +1,6 @@
 import z from "zod";
 import bcrypt from "bcrypt";
-import { registerService, getUserByEmail } from "../service/authService.js";
+import { registerService, getUserByEmail,AdminOnlyService } from "../service/authService.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
@@ -62,6 +62,7 @@ export const login = async(req, res) => {
         phone_number: userData.phone_number,
         image_url: userData.image_url,
         address: userData.address,
+        role: userData.role,
       },
       token: token,
     });
@@ -138,5 +139,17 @@ export const logout = async (req, res) => {
   }
 }
 
+export const AdminOnlyCon = async (req, res) => {
+  try{
+    if(!req.user) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    const user = await AdminOnlyService(req.user.email);
+    res.status(200).send(user);
+  }catch (err) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+
+}
 
 

@@ -28,7 +28,7 @@ const profile = () => {
       };
     }
     fetchProfile();
-  },[profile])
+  },[])
 
   console.log(imageUri)
  
