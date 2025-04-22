@@ -17,10 +17,15 @@ export const getAllOrdersService = async () => {
 };
 
 export const deleteOrderService = async (id) => {
-  return await prisma.order.delete({
-    // ลบ order ตาม id ที่ส่งมา
+  await prisma.orderItem.deleteMany({
     where: {
-        order_id: id,
+      order_id: id,
+    },
+  });
+
+  return await prisma.order.delete({
+    where: {
+      order_id: id,
     },
   });
 };

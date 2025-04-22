@@ -27,7 +27,6 @@ export default function Pay() {
      const response = await axios.post(`${API_URL}/order`, {
         customer_id:  customer?.customer_id, 
         total_amount: totalPrice,
-        status: "pending", 
         shipping_address: address,
         payment_method: "qrCode", 
       });

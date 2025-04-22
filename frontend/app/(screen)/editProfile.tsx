@@ -143,9 +143,9 @@ const EditProfile = () => {
                   ? imageUri
                   : "https://media.istockphoto.com/id/1278459951/th/เวคเตอร์/ตัวการ์ตูนดอกไม้น่ารัก.jpg",
               }}
-              className="w-44 h-44 rounded-full mr-15 items-center"
+              className="w-44 h-44 rounded-full mr-15 items-center  border-2 border-[#060506]"
               resizeMode="cover"
-            />
+            /> 
           </TouchableOpacity>
         </View>
 
