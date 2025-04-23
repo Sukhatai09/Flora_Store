@@ -97,13 +97,7 @@ const ConfirmOrder: React.FC = () => {
     }
   };
 
-  const handleAlert = () => {
-    toast.error("Order already completed!", {
-      position: "bottom-right",
-    });
-
-  };
-
+  
   return (
     <div className="px-8 py-10 font-sans bg-pink-50 min-h-screen">
       <div className="grid grid-cols-8 text-center bg-gradient-to-r from-pink-300 to-pink-400 rounded-xl p-4 shadow-md text-white font-bold text-lg overflow-hidden min-h-[80px]">
@@ -172,13 +166,11 @@ const ConfirmOrder: React.FC = () => {
             </button>
             <button
               onClick={
-                order.status === "completed"
-                  ? handleAlert
-                  : () => handleDelete(order.order_id)
+                 ()=> handleDelete(order.order_id)
               }
               className={
                 order.status === "completed"
-                  ? "bg-gray-400 hover:bg-gray-500 text-white font-bold py-1 px-4 rounded-full shadow"
+                  ? "bg-red-400 hover:bg-red-500 text-white font-bold py-1 px-4 rounded-full shadow"
                   : "bg-red-400 hover:bg-red-500 text-white font-bold py-1 px-4 rounded-full shadow"
               }
             >
